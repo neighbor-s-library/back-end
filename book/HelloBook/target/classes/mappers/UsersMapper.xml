@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="UsersMapper">
+
+    <!-- Beans의 멤버변수(property)이름과 대상 테이블의 컬럼(column)을 연결한다. -->
+    <resultMap id="usersMapper"
+        type="study.spring.hellobook.model.Users">
+        <result property="id"             column="id" />
+        <result property="email"          column="email" />
+        <result property="point"          column="point" />
+        <result property="address"        column="address" />
+        <result property="nickname"       column="nickname" />
+        <result property="created_at"     column="created_at" />
+        <result property="updated_at"     column="updated_at" />
+        
+        
+    </resultMap>
+
+    <!-- 데이터 수 조회를 위한 기능 정의 -->
+    <select id="selectCountAll"
+        parameterType="study.spring.hellobook.model.Users" resultType="int">
+        SELECT COUNT (*)
+        FROM users
+    </select>
+    
+     <!-- 단일행 조회를 위한 기능 정의 -->
+    <select id="selectItem" parameterType="study.spring.hellobook.model.Users"
+        resultMap="usersMapper">
+        SELECT * FROM users WHERE id=#{id};
+    </select>
+    
+    <!--  로그인 아이디 패스워드 확인 -->
+	<select id="idPwCheck" parameterType = "study.spring.hellobook.model.Users" resultMap="usersMapper">
+		SELECT id, email, name, pw FROM users WHERE email = #{email} AND pw = #{pw}
+	</select>
+	
+	<select id="pwCheck" parameterType = "study.spring.hellobook.model.Users" resultMap="usersMapper">
+		SELECT email, pw FROM users WHERE email = #{email}
+	</select>
+	
+	<!-- 회원정보 저장을 위한 기능 정의 -->
+	<insert id="insertUser"
+		parameterType = "study.spring.hellobook.model.Users"
+		useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO users(email, pw, name)
+		VALUES(#{email}, #{pw}, #{name}
+		)
+	</insert>
+	
+	<!--  아이디 중복 확인을 위한 기능 정의 -->
+	<select id="idCheck" parameterType = "study.spring.hellobook.model.Users" resultType="int">
+		SELECT COUNT(*) FROM users WHERE email = #{email}
+	</select>
+
+</mapper>

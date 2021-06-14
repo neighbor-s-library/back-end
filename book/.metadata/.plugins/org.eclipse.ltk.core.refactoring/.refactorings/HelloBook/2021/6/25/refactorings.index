@@ -9,3 +9,9 @@
 1623639268168	Rename package 'study.spring.hellobook.service.inpl'
 1623639280812	Delete element
 1623640321728	Rename type 'User'
+1623652525723	Rename resource 'userMapper.xml'
+1623653104979	Rename type 'UserAjaxController'
+1623653607211	Rename type 'UserRestController'
+1623653619353	Rename type 'UserService'
+1623653629419	Rename type 'UserServiceImpl'
+1623654001736	Rename resource 'UserMapper.xml'
