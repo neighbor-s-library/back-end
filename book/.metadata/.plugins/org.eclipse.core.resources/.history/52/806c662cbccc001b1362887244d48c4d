@@ -1,0 +1,14 @@
+package study.spring.springhelper.model;
+
+import lombok.Data;
+
+/** 테이블 구조에 맞춘 Java Beans 생성 */
+@Data
+public class User {
+	
+	private int id;
+	private int pw;
+	private String name;
+	private String email;
+	
+}

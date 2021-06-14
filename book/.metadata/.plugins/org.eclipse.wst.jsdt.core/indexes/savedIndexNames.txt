@@ -1,0 +1,2 @@
+INDEX VERSION 1.4+/Users/kimhyeji/Desktop/book/.metadata/.plugins/org.eclipse.wst.jsdt.core/indexes
+885416591.index
