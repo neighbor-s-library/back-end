@@ -12,5 +12,5 @@ public class Rental {
 	private String created_at;
 	private String returndate;
 	private String updated_at;
-	private String isrent;
+
 }
