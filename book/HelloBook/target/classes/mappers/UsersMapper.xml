@@ -14,8 +14,14 @@
         <result property="nickname"       column="nickname" />
         <result property="created_at"     column="created_at" />
         <result property="updated_at"     column="updated_at" />
-        
-        
+    </resultMap>
+    
+    <!-- Beans의 멤버변수(property)이름과 대상 테이블의 컬럼(column)을 연결한다. -->
+    <resultMap id="authMapper"
+        type="study.spring.hellobook.model.Auth">
+        <result property="user_id"         column="user_id" />
+        <result property="pw"              column="pw" />
+        <result property="tel"             column="tel" />
     </resultMap>
 
     <!-- 데이터 수 조회를 위한 기능 정의 -->
@@ -44,9 +50,16 @@
 	<insert id="insertUser"
 		parameterType = "study.spring.hellobook.model.Users"
 		useGeneratedKeys="true" keyProperty="id">
-		INSERT INTO users(email, pw, name)
-		VALUES(#{email}, #{pw}, #{name}
+		INSERT INTO users(email, address, nickname)
+		VALUES(#{email}, #{address}, #{nickname}
 		)
+	</insert>
+	
+	<!-- 회원정보 저장을 위한 기능 정의 - 개인정보 -->
+	<insert id="insertUser2"
+		parameterType = "study.spring.hellobook.model.Users_books">
+		INSERT INTO auth(pw, tel, user_id)
+		VALUES(#{pw}, #{tel}, #{user_id})
 	</insert>
 	
 	<!--  아이디 중복 확인을 위한 기능 정의 -->

@@ -15,3 +15,6 @@
 1623653619353	Rename type 'UserService'
 1623653629419	Rename type 'UserServiceImpl'
 1623654001736	Rename resource 'UserMapper.xml'
+1623691415833	Rename type 'Users_book'
+1623691427347	Rename type 'Users_booka'
+1623691617225	Delete element

@@ -1,6 +1,7 @@
 package study.spring.hellobook.service;
 
 
+import study.spring.hellobook.model.Auth;
 import study.spring.hellobook.model.Users;
 
 /** 사용자 데이터 관리 기능을 제공하기 위한 Service 계층 */
@@ -45,5 +46,13 @@ public interface UsersService {
 	 * @throws Exception
 	 */
 	public int addUser(Users input) throws Exception;
+	
+	/**
+	 * 회원가입 정보 저장 - 개인정보
+	 * @param Auth 검색조건을 담고 있는 Beans
+	 * @return int
+	 * @throws Exception
+	 */
+	public int addUser2(Auth input) throws Exception;
 	
 }

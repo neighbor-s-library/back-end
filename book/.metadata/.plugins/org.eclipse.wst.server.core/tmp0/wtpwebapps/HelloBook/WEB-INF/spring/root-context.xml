@@ -31,7 +31,7 @@
         <!-- 데이터베이스 포트번호 -->
         <prop key="dbPort">3306</prop>
         <!-- 데이터베이스 이름 -->
-        <prop key="dbName">test_book</prop>
+        <prop key="dbName">hellobook</prop>
         <!-- <prop key="dbName">springhelper</prop> -->
         <!-- 데이터베이스 문자셋 -->
         <prop key="dbCharset">utf8</prop>
