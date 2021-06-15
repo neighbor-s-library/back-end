@@ -7,5 +7,5 @@ import lombok.Data;
 public class Auth {
 	private int user_id;
 	private String pw;
-	private int tel;
+	private String tel;
 }
