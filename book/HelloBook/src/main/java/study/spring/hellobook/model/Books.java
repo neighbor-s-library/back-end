@@ -18,7 +18,7 @@ public class Books {
     /** 수정일시 */
     private String updated_at;
     /** 대여가능여부 */
-    private boolean	isrent;
+    private int	isrent;
     
 
 

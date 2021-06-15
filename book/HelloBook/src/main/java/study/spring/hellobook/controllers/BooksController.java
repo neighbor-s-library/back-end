@@ -123,17 +123,15 @@ public class BooksController {
 
         /** 학과 목록 조회하기 */
         // 조회결과를 저장할 객체 선언
-        List<Department> output = null;
-
-        try {
-            // 데이터 조회 --> 검색조건 없이 모든 학과 조회
-            output = departmentService.getDepartmentList(null);
-        } catch (Exception e) {
-            return webHelper.redirect(null, e.getLocalizedMessage());
-        }
-
-        // View에 추가
-        model.addAttribute("output", output);
+        //List<Department> output = null;
+		/*
+		 * try { // 데이터 조회 --> 검색조건 없이 모든 학과 조회 output =
+		 * departmentService.getDepartmentList(null); } catch (Exception e) { return
+		 * webHelper.redirect(null, e.getLocalizedMessage()); }
+		 * 
+		 * // View에 추가 model.addAttribute("output", output);
+		 나중 : 장르 리스트를 꺼내야?*/
+    
 
         return new ModelAndView("books/add");
 
@@ -145,10 +143,9 @@ public class BooksController {
             @RequestParam(value="title", defaultValue="") String title,
             @RequestParam(value="writer", defaultValue="") String writer,
             @RequestParam(value="pub", defaultValue="") String pub,
-            @RequestParam(value="sal", defaultValue="") int sal,
             @RequestParam(value="created_at", defaultValue="") String created_at,
-            @RequestParam(value="comm", defaultValue="") Integer comm,
-            @RequestParam(value="deptno", defaultValue="") int deptno) {
+            @RequestParam(value="updated_at", defaultValue="") String updated_at,
+            @RequestParam(value="Isrent", defaultValue="") int isrent ) {
 
         /** 1) 사용자가 입력한 파라미터 유효성 검사 */
         // 일반 문자열 입력 컬럼 --> String으로 파라미터 가 선언되어 있는 값이 입력되지 않으면 빈 문자열로 처리된다.
@@ -159,11 +156,6 @@ public class BooksController {
         if (!regexHelper.isValue(pub)) { return webHelper.redirect(null, "출판사을 입력하세요."); }
         if (!regexHelper.isValue(created_at)) { return webHelper.redirect(null, "등록일시을 입력하세요."); }
 
-        // 숫자형으로 선언된 파라미터()
-        if (sal == 0) { return webHelper.redirect(null, "급여를 입력하세요."); }
-        if (sal < 0) { return webHelper.redirect(null, "급여는 0보다 작을 수 없습니다."); }
-        if (comm < 0) { return webHelper.redirect(null, "보직수당은 0보다 작을 수 없습니다."); }
-        if (deptno < 0) { return webHelper.redirect(null, "소속 학과 번호를 입력하세요."); }
 
         /** 2) 데이터 저장하기 */
         // 저장할 값들을 Beans에 담는다.
@@ -171,10 +163,9 @@ public class BooksController {
         input.setTitle(title);
         input.setWriter(writer);
         input.setPub(pub);
-        input.setSal(sal);
         input.setCreated_at(created_at);
-        input.setComm(comm);
-        input.setDeptno(deptno);
+        input.setUpdated_at(updated_at);
+        input.setIsrent(isrent);
 
         try {
             // 데이터 저장
@@ -195,49 +186,48 @@ public class BooksController {
     public ModelAndView edit(Model model,
             @RequestParam(value="id", defaultValue="0") int id) {
 
-        /** 1) 파라미터 유효성 검사 */
-        // 이 값이 존재하지 않는다면 데이터 조회가 불가능하므로 반드시 필수값으로 처리해야 한다.
-        if(id == 0) {
-            return webHelper.redirect(null, "도서번호가 없습니다.");
-        }
-
-        /** 2) 데이터 조회하기 */
-        // 데이터 조회에 필요한 조건값을 Beans에 저장하기
-        Books input = new Books();
-        input.setId(id);
-
-        // 도서 조회결과를 저장할 객체 선언
-        Books output = null;
-
-        // 학과목록을 선택할 수 있는 드롭다운을 위한 조회결과를 저장할 객체 선언
-        List<Department> deptList = null;
-
-        try {
-            // 도서 기본 정보 조회
-            output = booksService.getBooksItem(input);
-            // 드롭다운을 위한 학과목록 조회
-            deptList = departmentService.getDepartmentList(null);
-        } catch (Exception e) {
-            return webHelper.redirect(null, e.getLocalizedMessage());
-        }
-
-        /** 3) View 처리 */
-        model.addAttribute("output", output);
-        model.addAttribute("deptList", deptList);
+//        /** 1) 파라미터 유효성 검사 */
+//        // 이 값이 존재하지 않는다면 데이터 조회가 불가능하므로 반드시 필수값으로 처리해야 한다.
+//        if(id == 0) {
+//            return webHelper.redirect(null, "도서번호가 없습니다.");
+//        }
+//
+//        /** 2) 데이터 조회하기 */
+//        // 데이터 조회에 필요한 조건값을 Beans에 저장하기
+//        Books input = new Books();
+//        input.setId(id);
+//
+//        // 도서 조회결과를 저장할 객체 선언
+//        Books output = null;
+//
+//        // 학과목록을 선택할 수 있는 드롭다운을 위한 조회결과를 저장할 객체 선언
+//        List<Department> deptList = null;
+//
+//        try {
+//            // 도서 기본 정보 조회
+//            output = booksService.getBooksItem(input);
+//            // 드롭다운을 위한 학과목록 조회
+//            deptList = departmentService.getDepartmentList(null);
+//        } catch (Exception e) {
+//            return webHelper.redirect(null, e.getLocalizedMessage());
+//        }
+//
+//        /** 3) View 처리 */
+//        model.addAttribute("output", output);
+//        model.addAttribute("deptList", deptList);
         return new ModelAndView("books/edit");
+    	// 나중에 디바트먼트 장르로 바꿔서 다시 도전
     }
 
     /** 수정 폼에 대한 action 페이지 */
     @RequestMapping(value="/books/edit_ok.do", method = RequestMethod.POST)
     public ModelAndView edit_ok(Model mode,
-            @RequestParam(value="title", defaultValue="") String title,
-            @RequestParam(value="id", defaultValue="0") int id,
+    		@RequestParam(value="title", defaultValue="") String title,
             @RequestParam(value="writer", defaultValue="") String writer,
             @RequestParam(value="pub", defaultValue="") String pub,
-            @RequestParam(value="sal", defaultValue="0") int sal,
             @RequestParam(value="created_at", defaultValue="") String created_at,
-            @RequestParam(value="comm", defaultValue="0") Integer comm,
-            @RequestParam(value="deptno", defaultValue="0") int deptno) {
+            @RequestParam(value="updated_at", defaultValue="") String updated_at,
+            @RequestParam(value="Isrent", defaultValue="") int isrent) {
 
         /** 1) 사용자가 입력한 파라미터 유효성 검사 */
         // 일반 문자열 입력 컬럼 --> String으로 파라미터가 선언되어 있는 경우는 값이 입력되지 않으면 빈 문자열로 처리된다.
@@ -248,23 +238,15 @@ public class BooksController {
         if (!regexHelper.isValue(pub)) { return webHelper.redirect(null, "출판사을 입력하세요."); }
         if (!regexHelper.isValue(created_at)) { return webHelper.redirect(null, "등록일시을 입력하세요."); }
 
-        // 숫자형으로 선언된 파라미터()
-        if (sal == 0)                       { return webHelper.redirect(null, "급여를 입력하세요."); }
-        if (sal < 0)                        { return webHelper.redirect(null, "급여는 0보다 작을 수 없습니다."); }
-        if (comm < 0)                       { return webHelper.redirect(null, "보직수당은 0보다 작을 수 없습니다."); }
-        if (deptno == 0)                    { return webHelper.redirect(null, "소속 학과 번호를 입력하세요."); }
-
         /** 2) 데이터 저장하기 */
         // 저장할 값들을 Beans에 담는다.
         Books input = new Books();
-        input.setId(id);
         input.setTitle(title);
         input.setWriter(writer);
         input.setPub(pub);
-        input.setSal(sal);
         input.setCreated_at(created_at);
-        input.setComm(comm);
-        input.setDeptno(deptno);
+        input.setUpdated_at(updated_at);
+        input.setIsrent(isrent);
 
         try {
             // 데이터 저장
