@@ -37,9 +37,15 @@
         SELECT * FROM users WHERE id=#{id};
     </select>
     
-    <!--  로그인 아이디 패스워드 확인 -->
-	<select id="idPwCheck" parameterType = "study.spring.hellobook.model.Users" resultMap="usersMapper">
-		SELECT id, email, name, pw FROM users WHERE email = #{email} AND pw = #{pw}
+    <!-- 개인정보 조회를 위한 기능 정의 -->
+    <select id="selectUsersInfoItem" parameterType="study.spring.hellobook.model.Auth"
+        resultMap="authMapper">
+        SELECT * FROM auth WHERE user_id=#{user_id};
+    </select>
+    
+    <!--  로그인 아이디로 사용자 정보조회 -->
+	<select id="EmailCheck" parameterType = "study.spring.hellobook.model.Users" resultMap="usersMapper">
+		SELECT * FROM users WHERE email = #{email}
 	</select>
 	
 	<select id="pwCheck" parameterType = "study.spring.hellobook.model.Users" resultMap="usersMapper">
@@ -66,5 +72,24 @@
 	<select id="idCheck" parameterType = "study.spring.hellobook.model.Users" resultType="int">
 		SELECT COUNT(*) FROM users WHERE email = #{email}
 	</select>
+	
+	<!-- 개인정보 수정하기  -->
+	<update id = "usersRevise"
+	parameterType = "study.spring.hellobook.model.Users">
+		UPDATE users SET
+		address = #{address},
+		nickname = #{nickname},
+		updated_at = now()
+		WHERE id = #{id}
+	</update>
+	
+	<!-- 개인정보 수정하기  -->
+	<update id = "usersInfoRevise"
+	parameterType = "study.spring.hellobook.model.Auth">
+		UPDATE auth SET
+			pw = #{pw},
+			tel = #{tel}
+		WHERE user_id = #{user_id}
+	</update>
 
 </mapper>
