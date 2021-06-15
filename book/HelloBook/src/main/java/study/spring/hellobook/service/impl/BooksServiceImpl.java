@@ -157,7 +157,7 @@ public class BooksServiceImpl implements BooksService {
 
         try {
             // 도서 삭제 전 자신을 참조하는 학생들의 id컬럼을 null로 수정
-            sqlSession.update("StudentMapper.unsetBooks", input);
+        	//sqlSession.update("StudentMapper.unsetBooks", input);
 
             result = sqlSession.delete("BooksMapper.deleteItem", input);
 

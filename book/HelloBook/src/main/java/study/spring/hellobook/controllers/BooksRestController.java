@@ -112,13 +112,13 @@ public class BooksRestController {
               @RequestParam(value="pub", defaultValue="") String pub,
               @RequestParam(value="created_at", defaultValue="") String created_at,
               @RequestParam(value="updated_at", defaultValue="") String updated_at,
-              @RequestParam(value="Isrent", defaultValue="") int isrent ) {
+              @RequestParam(value="Isrent", defaultValue="0") int isrent ) {
 
         /** 1) 사용자가 입력한 파라미터에 대한 유효성 검사 */
         // 일반 문자열 입력 컬럼 --> String으로 파라미터가 선언되어 있는 경우는 값이 입력되지 않으면 빈 문자열로 처리된다.
-        if (!regexHelper.isValue(title))     { return webHelper.getJsonWarning("도서 이름을 입력하세요."); }
+        if (!regexHelper.isValue(title))    { return webHelper.getJsonWarning("도서 이름을 입력하세요."); }
         if (!regexHelper.isValue(writer))   { return webHelper.getJsonWarning("도서 지은이를 입력하세요."); }
-        if (!regexHelper.isValue(pub)) { return webHelper.getJsonWarning("출판사을 입력하세요."); }
+        if (!regexHelper.isValue(pub)) 		{ return webHelper.getJsonWarning("출판사을 입력하세요."); }
 
         /** 2) 데이터 저장하기 */
         // 저장할 값들을 Beans에 담는다.
@@ -154,12 +154,12 @@ public class BooksRestController {
     /** 수정 폼에 대한 action 페이지 */
     @RequestMapping(value = "/books", method = RequestMethod.PUT)
     public Map<String, Object> put(
+    		@RequestParam(value = "id", defaultValue = "0") int id,
     		@RequestParam(value="title", defaultValue="") String title,
             @RequestParam(value="writer", defaultValue="") String writer,
             @RequestParam(value="pub", defaultValue="") String pub,
-            @RequestParam(value="created_at", defaultValue="") String created_at,
             @RequestParam(value="updated_at", defaultValue="") String updated_at,
-            @RequestParam(value="Isrent", defaultValue="") int isrent)  {
+            @RequestParam(value="Isrent", defaultValue="0") int isrent)  {
 
         /** 1) 사용자가 입력한 파라미터 유효성 검사 */
         if (!regexHelper.isValue(title))     { return webHelper.getJsonWarning("도서 이름을 입력하세요."); }
@@ -169,10 +169,10 @@ public class BooksRestController {
         /** 2) 데이터 수정하기 */
         // 수정할 값들을 Beans에 담는다.
         Books input = new Books();
+        input.setId(id);
         input.setTitle(title);
         input.setWriter(writer);
         input.setPub(pub);
-        input.setCreated_at(created_at);
         input.setUpdated_at(updated_at);
         input.setIsrent(isrent);
 

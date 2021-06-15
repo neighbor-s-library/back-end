@@ -7,13 +7,13 @@
     <!-- Beans의 멤버변수(property)이름과 대상 테이블의 컬럼(column)을 연결한다. -->
     <resultMap id="booksMap"
         type="study.spring.hellobook.model.Books">
-        <result property="id"   column="id" />
-        <result property="title"     column="title" />
-        <result property="writer"   column="writer" />
-        <result property="pub" column="pub" />
-        <result property="created_at" column="created_at" />
-        <result property="updated_at"     column="updated_at" />
-        <result property="isrent"   column="isrent" />
+        <result property="id"   		column="id" />
+        <result property="title"    	column="title" />
+        <result property="writer"   	column="writer" />
+        <result property="pub" 			column="pub" />
+        <result property="created_at"	column="created_at" />
+        <result property="updated_at"   column="updated_at" />
+        <result property="isrent"  		column="isrent" />
     </resultMap>
 
     <!-- 단일행 조회를 위한 기능 정의 -->
@@ -54,11 +54,12 @@
     </select>
 
     <!-- 데이터 저장을 위한 기능 정의 -->
-    <insert id="insertItem" parameterType="study.spring.hellobook.model.Books" useGeneratedKeys="true" keyProperty="id">
+    <insert id="insertItem" parameterType="study.spring.hellobook.model.Books" 
+	useGeneratedKeys="true" keyProperty="id">
         INSERT INTO books (
-           title, writer, pub, created_at, updated_at, isrent
+           title, writer, pub, created_at
         ) VALUES (
-            #{title}, #{writer}, #{pub}, #{created_at}, #{updated_at}, #{isrent}
+            #{title}, #{writer}, #{pub}, now()
         )
     </insert>
 
@@ -70,7 +71,7 @@
     <!-- 데이터 갱신을 위한 기능 정의 -->
     <update id="updateItem" parameterType="study.spring.hellobook.model.Books">
         UPDATE books SET
-            title=#{title}, writer=#{writer}, pub=#{pub}, created_at=#{created_at}, updated_at=#{updated_at}, isrent=#{isrent}
+            title=#{title}, writer=#{writer}, pub=#{pub}, updated_at= now(), isrent=#{isrent}
         WHERE id=#{id}
     </update>
 </mapper>
