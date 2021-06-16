@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="RentalMapper">
+
+	<!-- Beans의 멤버변수(property)이름과 대상 테이블의 컬럼(column)을 연결한다. -->
+	<resultMap id="rentalMapper"
+		type="study.spring.hellobook.model.Rental">
+		<result property="id"         column="id" />
+		<result property="book_id"    column="book_id" />
+		<result property="owner_id"   column="owner_id" />
+		<result property="renter_id"  column="renter_id" />
+		<result property="returndate" column="returndate" />
+		<result property="created_at" column="created_at" />
+		<result property="updated_at" column="updated_at" />
+	</resultMap>
+	
+	<!-- =======빌려준 사람 기준 (owner_id)====== -->
+	<!-- 데이터 수 조회를 위한 기능 정의 -->
+	<select id="selectCountBookOwner"
+        parameterType="study.spring.hellobook.model.Rental" resultType="int">
+        SELECT COUNT (*)
+        FROM rental WHERE owner_id = #{owner_id}
+    </select>
+
+	<!-- 다중행 조회를 위한 기능 정의 -->
+	<select id="selectItemOwner" parameterType="study.spring.hellobook.model.Rental"
+        resultMap="rentalMapper">
+        SELECT * FROM rental WHERE owner_id=#{owner_id};
+    </select>
+	
+	
+	
+	<!-- =======빌린 사람 기준 (renter_id)====== -->
+	<!-- 데이터 수 조회를 위한 기능 정의 -->
+	<select id="selectCountBookRenter"
+        parameterType="study.spring.hellobook.model.Rental" resultType="int">
+        SELECT COUNT (*)
+        FROM rental WHERE renter_id = #{renter_id}
+    </select>
+	
+	<!-- 다중행 조회를 위한 기능 정의 -->
+	<select id="selectItemRenter" parameterType="study.spring.hellobook.model.Rental"
+        resultMap="rentalMapper">
+        SELECT * FROM rental WHERE renter_id=#{renter_id};
+    </select>
+    
+    
+    
+    <!-- ============== 공통 ================ -->
+    <!-- Rental 테이블에 데이터 추가를 위한 기능 정의 -->
+	<insert id="insertItem"
+		parameterType = "study.spring.hellobook.model.Rental"
+		useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO rental(book_id, owner_id, renter_id, returndate)
+		VALUES(#{book_id}, #{owner_id}, #{renter_id}, #{returndate})
+	</insert>
+	
+	<!-- 반납일정 수정을 위한 기능 정의 -->
+	<update id = "updateItem"
+	parameterType = "study.spring.hellobook.model.Rental">
+		UPDATE users SET
+		returndate = #{returndate},
+		updated_at = #{updated_at},
+		WHERE id = #{id}
+	</update>
+	
+	
+	
+
+</mapper>

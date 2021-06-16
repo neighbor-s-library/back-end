@@ -9,6 +9,7 @@ import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -82,39 +83,35 @@ public class UsersRestController {
 
 	/** 회원가입 작성 폼에 대한 action 페이지 */
 	@RequestMapping(value = "/join", method = RequestMethod.POST)
-	public Map<String, Object> add_user(Model model, @RequestParam(value = "email", defaultValue = "") String email,
-			@RequestParam(value = "address", defaultValue = "") String address,
-			@RequestParam(value = "nickname", defaultValue = "") String nickname,
-			@RequestParam(value = "inputpw", defaultValue = "") String inputpw,
-			@RequestParam(value = "tel", defaultValue = "") String tel) {
+	public Map<String, Object> add_user(@RequestBody Users user) {
 		// POST 방식으로 Join_ok에서 Join cfm
 
 		/** 1) 사용자가 입력한 파라미터 유효성 검사 */
-		if (!regexHelper.isValue(email)) {
+		if (!regexHelper.isValue(user.getEmail())) {
 			return webHelper.getJsonWarning("이메일을 입력하세요.");
 		}
-		if (!regexHelper.isValue(address)) {
+		if (!regexHelper.isValue(user.getAddress())) {
 			return webHelper.getJsonWarning("주소를 입력하세요.");
 		}
-		if (!regexHelper.isValue(nickname)) {
+		if (!regexHelper.isValue(user.getNickname())) {
 			return webHelper.getJsonWarning("닉네임을 입력하세요.");
 		}
-		if (!regexHelper.isValue(inputpw)) {
+		if (!regexHelper.isValue(user.getPw())) {
 			return webHelper.getJsonWarning("비밀번호를 입력하세요.");
 		}
-		if (!regexHelper.isNum(tel)) {
+		if (!regexHelper.isNum(user.getTel())) {
 			return webHelper.getJsonWarning("전화번호를 올바른 형식에 맞게 입력하세요.");
 		}
 
 		/** 2) 데이터 저장하기 */
 		// 저장할 값들을 Beans에 담는다.
 		Users input = new Users();
-		input.setEmail(email);
-		input.setAddress(address);
-		input.setNickname(nickname);
+		input.setEmail(user.getEmail());
+		input.setAddress(user.getAddress());
+		input.setNickname(user.getNickname());
 
 		// 비밀번호 암호화
-		String pw = pwdEncoder.encode(inputpw);
+		String pw = pwdEncoder.encode(user.getPw());
 
 		// 저장된 결과를 조회하기 위한 객체
 		Users output = null;
@@ -132,7 +129,7 @@ public class UsersRestController {
 				Auth input2 = new Auth();
 				input2.setUser_id(user_id);
 				input2.setPw(pw);
-				input2.setTel(tel);
+				input2.setTel(user.getTel());
 				userService.addUser2(input2);
 
 				// 데이터 조회
@@ -154,15 +151,13 @@ public class UsersRestController {
 
 	/** 로그인 아이디, 패스워드 확인 */
 	@RequestMapping(value = "/users/login_ok.do", method = RequestMethod.POST)
-	public Map<String, Object> login_post(Model model, HttpServletRequest request,
-			@RequestParam(value = "email", defaultValue = "") String email,
-			@RequestParam(value = "userpwd", defaultValue = "") String userpwd) {
+	public Map<String, Object> login_post(HttpServletRequest request, @RequestBody Users user) {
 
 		/** 사용자가 입력한 파라미터 유효성 검사 */
-		if (!regexHelper.isValue(email)) {
+		if (!regexHelper.isValue(user.getEmail())) {
 			return webHelper.getJsonWarning("아이디를 입력하세요.");
 		}
-		if (!regexHelper.isValue(userpwd)) {
+		if (!regexHelper.isValue(user.getPw())) {
 			return webHelper.getJsonWarning("비밀번호를 입력하세요.");
 		}
 
@@ -172,7 +167,7 @@ public class UsersRestController {
 		/** 입력값 일치 확인하기 */
 		// 저장할 값들을 Beans에 담는다.
 		Users input = new Users();
-		input.setEmail(email);
+		input.setEmail(user.getEmail());
 		Users idoutput = new Users();
 
 		try {
@@ -212,7 +207,7 @@ public class UsersRestController {
 		HttpSession session = request.getSession();
 
 		// 입력한 비밀번호와 DB에서 가져온 비밀번호가 일치할 경우 데이터를 조회한다.
-		if (pwdEncoder.matches(userpwd, dbpwd)) {
+		if (pwdEncoder.matches(user.getPw(), dbpwd)) {
 
 			// 세션 저장 처리
 			session.setAttribute("my_session", userIdInput.getUser_id());
@@ -251,15 +246,14 @@ public class UsersRestController {
 
 	/** 개인 정보 수정 */
 	@RequestMapping(value = "/users/usersRevise_ok", method = RequestMethod.PUT)
-	public Map<String, Object> users_revise(Model model, HttpServletRequest request,
-			@RequestParam(value = "id", defaultValue = "0") int id,
-			@RequestParam(value = "address", defaultValue = "") String address,
-			@RequestParam(value = "nickname", defaultValue = "") String nickname) {
+	public Map<String, Object> users_revise(HttpServletRequest request,
+			@RequestBody Users user) {
 
 		/** 파라미터에 대한 유효성 검사 */
 
 		// 로그인 여부 확인 -> 로그인 중 일때 : id!=0 / 로그인 하지 않았을때 : id ==0
 		HttpSession session = request.getSession();
+		int id = 0;
 		if (session.getAttribute("my_session") != null) {
 			id = (int) session.getAttribute("my_session");
 		}
@@ -267,10 +261,10 @@ public class UsersRestController {
 		if (id == 0) {
 			return webHelper.getJsonWarning("사용자 번호가 없습니다.");
 		}
-		if (!regexHelper.isValue(address)) {
+		if (!regexHelper.isValue(user.getAddress())) {
 			return webHelper.getJsonWarning("주소를 입력해주세요.");
 		}
-		if (!regexHelper.isValue(nickname)) {
+		if (!regexHelper.isValue(user.getNickname())) {
 			return webHelper.getJsonWarning("닉네임을 입력해주세요.");
 		}
 
@@ -278,8 +272,8 @@ public class UsersRestController {
 		Users input = new Users();
 
 		input.setId(id);
-		input.setNickname(nickname);
-		input.setAddress(address);
+		input.setNickname(user.getNickname());
+		input.setAddress(user.getAddress());
 
 		Users output = null;
 
@@ -303,15 +297,14 @@ public class UsersRestController {
 
 	/** 개인 정보 수정 (비밀번호, 전화번호) */
 	@RequestMapping(value = "/users/usersInfoRevise_ok", method = RequestMethod.PUT)
-	public Map<String, Object> usersInfo_revise(Model model, HttpServletRequest request,
-			@RequestParam(value = "id", defaultValue = "0") int id,
-			@RequestParam(value = "inputpw", defaultValue = "") String inputpw,
-			@RequestParam(value = "tel", defaultValue = "") String tel) {
+	public Map<String, Object> usersInfo_revise(HttpServletRequest request,
+			@RequestBody Auth auth) {
 
 		/** 파라미터에 대한 유효성 검사 */
 
 		// 로그인 여부 확인 -> 로그인 중 일때 : id!=0 / 로그인 하지 않았을때 : id ==0
 		HttpSession session = request.getSession();
+		int id = 0;
 		if (session.getAttribute("my_session") != null) {
 			id = (int) session.getAttribute("my_session");
 		}
@@ -319,10 +312,10 @@ public class UsersRestController {
 		if (id == 0) {
 			return webHelper.getJsonWarning("사용자 번호가 없습니다.");
 		}
-		if (!regexHelper.isValue(inputpw)) {
+		if (!regexHelper.isValue(auth.getPw())) {
 			return webHelper.getJsonWarning("새로운 비밀번호를 입력해주세요.");
 		}
-		if (!regexHelper.isValue(tel)) {
+		if (!regexHelper.isValue(auth.getTel())) {
 			return webHelper.getJsonWarning("전화번호를 입력해주세요.");
 		}
 
@@ -331,9 +324,9 @@ public class UsersRestController {
 
 		input.setUser_id(id);
 		// 비밀번호 암호화
-		String pw = pwdEncoder.encode(inputpw);
+		String pw = pwdEncoder.encode(auth.getPw());
 		input.setPw(pw);
-		input.setTel(tel);
+		input.setTel(auth.getTel());
 
 		Users output = null;
 
@@ -359,18 +352,18 @@ public class UsersRestController {
 
 	}
 
-	// 비밀번호 찾기
+	/** 비밀번호 찾기 - 이메일 발송 */
 	@RequestMapping(value = "/users/pwfind_ok.do", method = RequestMethod.POST)
-	public Map<String, Object> pw_find(Model model, @RequestParam(value = "email", defaultValue = "") String email) {
+	public Map<String, Object> pw_find(@RequestBody Users user) {
 
-		if (!regexHelper.isValue(email)) {
+		if (!regexHelper.isValue(user.getEmail())) {
 			return webHelper.getJsonWarning("이메일을 입력하세요.");
 		}
 
 		/** 1) 데이터 조회하기 */
 		// 데이터 조회에 필요한 조건을 Beans에 저장하기
 		Users input = new Users();
-		input.setEmail(email);
+		input.setEmail(user.getEmail());
 
 		// 조회결과를 저장할 객체 선언
 		Users output = null;
@@ -415,5 +408,5 @@ public class UsersRestController {
 		data.put("item", output);
 		return webHelper.getJsonData(data);
 	}
-
+	
 }

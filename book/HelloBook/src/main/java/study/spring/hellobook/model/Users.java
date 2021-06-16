@@ -14,4 +14,8 @@ public class Users {
 	private String created_at;
 	private String updated_at;
 	
+	//Auth
+	private String pw;
+	private String tel;
+	
 }

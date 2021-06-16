@@ -27,7 +27,8 @@
     <!-- DB연동에 필요한 환경설정 값 -->
     <util:properties id="dbConfig">
         <!-- 데이터베이스 호스트 이름 -->
-        <prop key="dbHost">localhost</prop>
+        <prop key="dbHost">docker-mysql.cp7ako3rs8fl.ap-northeast-2.rds.amazonaws.com</prop>
+        <!-- <prop key="dbHost">localhost</prop> -->
         <!-- 데이터베이스 포트번호 -->
         <prop key="dbPort">3306</prop>
         <!-- 데이터베이스 이름 -->
@@ -36,9 +37,11 @@
         <!-- 데이터베이스 문자셋 -->
         <prop key="dbCharset">utf8</prop>
         <!-- 데이터베이스 계정명 -->
-        <prop key="dbUsername">root</prop>
+        <prop key="dbUsername">user</prop>
+        <!-- <prop key="dbUsername">root</prop> -->
         <!-- 데이터베이스 비밀번호 -->
-        <prop key="dbPassword">123qwe!@#</prop>
+        <!-- <prop key="dbPassword">123qwe!@#</prop> -->
+        <prop key="dbPassword">Biblioteca</prop>
         <!-- Mapper 파일들이 위치할 '/src/main/resources' 하위의 경로 -->
         <prop key="mapperPath">/mappers/**/*Mapper.xml</prop>
     </util:properties>
