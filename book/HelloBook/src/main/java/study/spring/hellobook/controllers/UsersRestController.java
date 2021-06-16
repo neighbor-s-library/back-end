@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.ui.Model;
 
+import study.spring.hellobook.helper.MailHelper;
 import study.spring.hellobook.helper.RegexHelper;
 import study.spring.hellobook.helper.WebHelper;
 import study.spring.hellobook.model.Auth;
@@ -32,6 +33,10 @@ public class UsersRestController {
 	/** RegexHelper 주입 */
 	@Autowired
 	RegexHelper regexHelper;
+
+	/** MailHlper 주입 */
+	@Autowired
+	MailHelper mailHelper;
 
 	/** Service 패턴 구현체 주입 */
 	@Autowired
@@ -76,7 +81,7 @@ public class UsersRestController {
 	}
 
 	/** 회원가입 작성 폼에 대한 action 페이지 */
-	@RequestMapping(value = "/users", method = RequestMethod.POST)
+	@RequestMapping(value = "/join", method = RequestMethod.POST)
 	public Map<String, Object> add_user(Model model, @RequestParam(value = "email", defaultValue = "") String email,
 			@RequestParam(value = "address", defaultValue = "") String address,
 			@RequestParam(value = "nickname", defaultValue = "") String nickname,
@@ -127,7 +132,7 @@ public class UsersRestController {
 				Auth input2 = new Auth();
 				input2.setUser_id(user_id);
 				input2.setPw(pw);
-				input2.setTel(Integer.parseInt(tel));
+				input2.setTel(tel);
 				userService.addUser2(input2);
 
 				// 데이터 조회
@@ -237,13 +242,28 @@ public class UsersRestController {
 		return webHelper.getJsonData(data);
 	}
 
+	/** 로그아웃 */
+	@RequestMapping(value = "/logout", method = RequestMethod.GET)
+	public String logout(HttpSession session) {
+		session.invalidate();
+		return "redirect:/";
+	}
+
 	/** 개인 정보 수정 */
 	@RequestMapping(value = "/users/usersRevise_ok", method = RequestMethod.PUT)
-	public Map<String, Object> users_revise(Model model, @RequestParam(value = "id", defaultValue = "0") int id,
+	public Map<String, Object> users_revise(Model model, HttpServletRequest request,
+			@RequestParam(value = "id", defaultValue = "0") int id,
 			@RequestParam(value = "address", defaultValue = "") String address,
 			@RequestParam(value = "nickname", defaultValue = "") String nickname) {
 
 		/** 파라미터에 대한 유효성 검사 */
+
+		// 로그인 여부 확인 -> 로그인 중 일때 : id!=0 / 로그인 하지 않았을때 : id ==0
+		HttpSession session = request.getSession();
+		if (session.getAttribute("my_session") != null) {
+			id = (int) session.getAttribute("my_session");
+		}
+
 		if (id == 0) {
 			return webHelper.getJsonWarning("사용자 번호가 없습니다.");
 		}
@@ -280,14 +300,22 @@ public class UsersRestController {
 		return webHelper.getJsonData(map);
 
 	}
-	
-	/** 개인 정보 수정 */
+
+	/** 개인 정보 수정 (비밀번호, 전화번호) */
 	@RequestMapping(value = "/users/usersInfoRevise_ok", method = RequestMethod.PUT)
-	public Map<String, Object> usersInfo_revise(Model model, @RequestParam(value = "id", defaultValue = "0") int id,
+	public Map<String, Object> usersInfo_revise(Model model, HttpServletRequest request,
+			@RequestParam(value = "id", defaultValue = "0") int id,
 			@RequestParam(value = "inputpw", defaultValue = "") String inputpw,
 			@RequestParam(value = "tel", defaultValue = "") String tel) {
 
 		/** 파라미터에 대한 유효성 검사 */
+
+		// 로그인 여부 확인 -> 로그인 중 일때 : id!=0 / 로그인 하지 않았을때 : id ==0
+		HttpSession session = request.getSession();
+		if (session.getAttribute("my_session") != null) {
+			id = (int) session.getAttribute("my_session");
+		}
+
 		if (id == 0) {
 			return webHelper.getJsonWarning("사용자 번호가 없습니다.");
 		}
@@ -305,16 +333,16 @@ public class UsersRestController {
 		// 비밀번호 암호화
 		String pw = pwdEncoder.encode(inputpw);
 		input.setPw(pw);
-		input.setTel(Integer.parseInt(tel));
+		input.setTel(tel);
 
 		Users output = null;
 
 		try {
 			// 데이터 수정
 			userService.usersInfoRevise(input);
-			
+
 			int userid = input.getUser_id();
-			Users updateinput = new Users(); 
+			Users updateinput = new Users();
 			updateinput.setId(userid);
 
 			// 수정 결과 조회
@@ -329,6 +357,63 @@ public class UsersRestController {
 		map.put("item", output);
 		return webHelper.getJsonData(map);
 
+	}
+
+	// 비밀번호 찾기
+	@RequestMapping(value = "/users/pwfind_ok.do", method = RequestMethod.POST)
+	public Map<String, Object> pw_find(Model model, @RequestParam(value = "email", defaultValue = "") String email) {
+
+		if (!regexHelper.isValue(email)) {
+			return webHelper.getJsonWarning("이메일을 입력하세요.");
+		}
+
+		/** 1) 데이터 조회하기 */
+		// 데이터 조회에 필요한 조건을 Beans에 저장하기
+		Users input = new Users();
+		input.setEmail(email);
+
+		// 조회결과를 저장할 객체 선언
+		Users output = null;
+
+		try {
+			// 데이터 조회
+			output = userService.getUserItem2(input);
+
+			// 이메일 존재 하면 메일 발송 처리
+			if (output != null) {
+				try {
+					// 이메일 제목
+					String subject = "HelloBook 비밀번호 재설정을 위한 메세지 입니다.";
+					// 비밀번호 수정 페이지 URL
+					String url = "비밀번호 수정 URL(현재 임시)";
+					// 사용자 번호
+					int param_userno = output.getId();
+
+					String pwrevise_url = url + "?" + "id=" + param_userno;
+
+					// 전송할 이메일 내용
+					String content = "<div style = 'width : 75%; border: 35px solid #FBEAE9; margin:auto; padding:30px;'>"
+							+ "<h2> 안녕하세요. HelloBook 입니다 </h2>" + "<br />"
+							+ "<p> 해당 메일은 비밀번호 재설정 요청에 의해 전송된 이메일 입니다. <p>" + "<br />"
+							+ "<p> 고객님께서 요청하지 않으신 내용이라면 HelloBook에 접속하여 비밀번호를 변경해주시고, 고객센터에 문의 해주시기 바랍니다.</p>"
+							+ "<br />" + "<p> 비밀번호 변경을 요청하셨다면 아래 버튼을 클릭하시면 비밀번호 변경이 가능한 페이지로 이동합니다.</p>" + "<br />"
+							+ "<a type= 'button' style ='display:block; width:140px; height: 32px; color:#fff; "
+							+ "font-size: 12px; font-weight:bold; background-color: #FBD6AB; margin:auto; "
+							+ "margin-top: 20px; border-radius:25px; text-align: center; padding-top: 15px; text-decoration: none;' href='"
+							+ pwrevise_url + "'>비밀번호 변경하기</a>" + "</div>";
+					// sendMail() 메서드 선언시 throws 를 정의했기 때문에 예외처리가 요구된다.
+					mailHelper.sendMail(output.getEmail(), subject, content);
+				} catch (Exception e) {
+					return webHelper.getJsonError(e.getLocalizedMessage());
+				}
+			}
+		} catch (Exception e) {
+			return webHelper.getJsonError(e.getLocalizedMessage());
+		}
+		/** 3)JSON 출력하기 */
+		Map<String, Object> data = new HashMap<String, Object>();
+		data.put("item", output);
+		return webHelper.getJsonData(data);
 	}
 
 }

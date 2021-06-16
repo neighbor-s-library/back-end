@@ -13,12 +13,20 @@ public class Books {
     private String writer;
     /** 출판사*/
     private String pub;
+    /** 상세정보*/
+    private String detail;
+    /** 장르 ENUM('fiction', 'non-fiction', 'comic')*/
+    private String genre;
     /** 등록일시 */
     private String created_at;
     /** 수정일시 */
     private String updated_at;
-    /** 대여가능여부 */
-    private int	isrent;
+    /** 대여상태여부(대여상태에서 Y) */
+    private String	isrent;
+    /** 숨기기 여부(삭제상태에서 Y)*/
+    private String hide;
+    /** 이미지 파일의 저장위치*/
+    private String img;
     
 
 

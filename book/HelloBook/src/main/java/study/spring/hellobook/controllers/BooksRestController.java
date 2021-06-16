@@ -4,8 +4,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -16,6 +22,7 @@ import study.spring.hellobook.helper.RegexHelper;
 import study.spring.hellobook.helper.WebHelper;
 import study.spring.hellobook.model.Books;
 import study.spring.hellobook.service.BooksService;
+import study.spring.hellobook.service.UsersService;
 
 @RestController
 public class BooksRestController {
@@ -31,6 +38,8 @@ public class BooksRestController {
     /** Service 패턴 구현체 주입 */
     // --> import study.spring.hellobook.service.BooksService;
     @Autowired  BooksService booksService;
+    
+    @Autowired  UsersService userService;
 
     /** 목록 페이지 */
     @RequestMapping(value = "/books", method = RequestMethod.GET)
@@ -106,29 +115,34 @@ public class BooksRestController {
 
     /** 작성 폼에 대한 action 페이지 */
     @RequestMapping(value = "/books", method = RequestMethod.POST)
-    public Map<String, Object> post(
-    		  @RequestParam(value="title", defaultValue="") String title,
-              @RequestParam(value="writer", defaultValue="") String writer,
-              @RequestParam(value="pub", defaultValue="") String pub,
-              @RequestParam(value="created_at", defaultValue="") String created_at,
-              @RequestParam(value="updated_at", defaultValue="") String updated_at,
-              @RequestParam(value="Isrent", defaultValue="0") int isrent ) {
-
+    public Map<String, Object> post(HttpServletRequest request,
+    		  //@RequestParam(value="id", defaultValue = "0") int user_id,//사용자의 ID
+    		 @RequestBody Books books ) {
+    	// 로그인 여부 확인 -> 로그인 중 일때 : id!=0 / 로그인 하지 않았을때 : id ==0
+//    			HttpSession session = request.getSession();
+//    			if (session.getAttribute("my_session") != null) {
+//    				id = (int) session.getAttribute("my_session");
+//    			}
         /** 1) 사용자가 입력한 파라미터에 대한 유효성 검사 */
         // 일반 문자열 입력 컬럼 --> String으로 파라미터가 선언되어 있는 경우는 값이 입력되지 않으면 빈 문자열로 처리된다.
-        if (!regexHelper.isValue(title))    { return webHelper.getJsonWarning("도서 이름을 입력하세요."); }
-        if (!regexHelper.isValue(writer))   { return webHelper.getJsonWarning("도서 지은이를 입력하세요."); }
-        if (!regexHelper.isValue(pub)) 		{ return webHelper.getJsonWarning("출판사을 입력하세요."); }
+        if (!regexHelper.isValue(books.getTitle()))    { return webHelper.getJsonWarning("도서 이름을 입력하세요."); }
+        if (!regexHelper.isValue(books.getWriter()))   { return webHelper.getJsonWarning("도서 지은이를 입력하세요."); }
+        if (!regexHelper.isValue(books.getPub())) 		{ return webHelper.getJsonWarning("출판사을 입력하세요."); }
 
         /** 2) 데이터 저장하기 */
         // 저장할 값들을 Beans에 담는다.
         Books input = new Books();
-        input.setTitle(title);
-        input.setWriter(writer);
-        input.setPub(pub);
-        input.setCreated_at(created_at);
-        input.setUpdated_at(updated_at);
-        input.setIsrent(isrent);
+        input.setTitle(books.getTitle());
+        input.setWriter(books.getWriter());
+        input.setGenre(books.getGenre());
+        input.setPub(books.getPub());
+        input.setDetail(books.getDetail());
+        input.setImg(books.getImg());
+        input.setCreated_at(books.getCreated_at());
+        
+        // input.setUpdated_at(books.getUpdated_at());        
+        // input.setIsrent(books.getIsrent());
+        // input.setHide(books.getHide());
 
 
         // 저장된 결과를 조회하기 위한 객체
@@ -154,27 +168,26 @@ public class BooksRestController {
     /** 수정 폼에 대한 action 페이지 */
     @RequestMapping(value = "/books", method = RequestMethod.PUT)
     public Map<String, Object> put(
-    		@RequestParam(value = "id", defaultValue = "0") int id,
-    		@RequestParam(value="title", defaultValue="") String title,
-            @RequestParam(value="writer", defaultValue="") String writer,
-            @RequestParam(value="pub", defaultValue="") String pub,
-            @RequestParam(value="updated_at", defaultValue="") String updated_at,
-            @RequestParam(value="Isrent", defaultValue="0") int isrent)  {
+    		@RequestBody Books books)  {
 
         /** 1) 사용자가 입력한 파라미터 유효성 검사 */
-        if (!regexHelper.isValue(title))     { return webHelper.getJsonWarning("도서 이름을 입력하세요."); }
-        if (!regexHelper.isValue(writer))   { return webHelper.getJsonWarning("도서 지은이를 입력하세요."); }
-        if (!regexHelper.isValue(pub)) { return webHelper.getJsonWarning("출판사을 입력하세요."); }
+        if (!regexHelper.isValue(books.getTitle()))     { return webHelper.getJsonWarning("도서 이름을 입력하세요."); }
+        if (!regexHelper.isValue(books.getWriter()))   { return webHelper.getJsonWarning("도서 지은이를 입력하세요."); }
+        if (!regexHelper.isValue(books.getPub())) { return webHelper.getJsonWarning("출판사를 입력하세요."); }
 
         /** 2) 데이터 수정하기 */
         // 수정할 값들을 Beans에 담는다.
         Books input = new Books();
-        input.setId(id);
-        input.setTitle(title);
-        input.setWriter(writer);
-        input.setPub(pub);
-        input.setUpdated_at(updated_at);
-        input.setIsrent(isrent);
+        input.setId(books.getId());
+        input.setTitle(books.getTitle());
+        input.setWriter(books.getWriter());
+        input.setGenre(books.getGenre());
+        input.setPub(books.getPub());
+        input.setDetail(books.getDetail());
+        input.setImg(books.getImg());
+        input.setUpdated_at(books.getUpdated_at());
+        input.setIsrent(books.getIsrent());
+        input.setHide(books.getHide());
 
         // 수정된 결과를 조회하기 위한 객체
         Books output = null;
@@ -193,6 +206,7 @@ public class BooksRestController {
         map.put("item", output);
         return webHelper.getJsonData(map);
     }
+    
 
     /** 삭제 처리 */
     @RequestMapping(value = "/books", method = RequestMethod.DELETE)
