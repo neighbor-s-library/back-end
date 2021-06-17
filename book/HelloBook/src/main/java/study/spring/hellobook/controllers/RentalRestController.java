@@ -32,7 +32,9 @@ public class RentalRestController {
 	@Value("#{servletContext.contextPath}")
 	String contextPath;
 
-	//대여
+	/** 책 대여중 */
 	
-	//대여완료
+	/** 책 대여 완료 - 반납완료 */
+	
+	/** 책 대여 기간 수정 - 기간 연장 */
 }
