@@ -21,6 +21,7 @@ import study.spring.hellobook.helper.PageData;
 import study.spring.hellobook.helper.RegexHelper;
 import study.spring.hellobook.helper.WebHelper;
 import study.spring.hellobook.model.Books;
+import study.spring.hellobook.model.Users_books;
 import study.spring.hellobook.service.BooksService;
 import study.spring.hellobook.service.UsersService;
 
@@ -116,19 +117,20 @@ public class BooksRestController {
     /** 작성 폼에 대한 action 페이지 */
     @RequestMapping(value = "/books", method = RequestMethod.POST)
     public Map<String, Object> post(HttpServletRequest request,
-    		  //@RequestParam(value="id", defaultValue = "0") int user_id,//사용자의 ID
+    		 @RequestParam(value="id", defaultValue = "0") int user_id,//사용자의 ID
     		 @RequestBody Books books ) {
     	// 로그인 여부 확인 -> 로그인 중 일때 : id!=0 / 로그인 하지 않았을때 : id ==0
-//    			HttpSession session = request.getSession();
-//    			if (session.getAttribute("my_session") != null) {
-//    				id = (int) session.getAttribute("my_session");
-//    			}
+    		HttpSession session = request.getSession();
+    			if (session.getAttribute("my_session") != null
+    					) {
+    			user_id = (int) session.getAttribute("my_session");
+    				}
         /** 1) 사용자가 입력한 파라미터에 대한 유효성 검사 */
         // 일반 문자열 입력 컬럼 --> String으로 파라미터가 선언되어 있는 경우는 값이 입력되지 않으면 빈 문자열로 처리된다.
         if (!regexHelper.isValue(books.getTitle()))    { return webHelper.getJsonWarning("도서 이름을 입력하세요."); }
         if (!regexHelper.isValue(books.getWriter()))   { return webHelper.getJsonWarning("도서 지은이를 입력하세요."); }
         if (!regexHelper.isValue(books.getPub())) 		{ return webHelper.getJsonWarning("출판사을 입력하세요."); }
-
+        
         /** 2) 데이터 저장하기 */
         // 저장할 값들을 Beans에 담는다.
         Books input = new Books();
@@ -158,10 +160,27 @@ public class BooksRestController {
         } catch (Exception e) {
             return webHelper.getJsonError(e.getLocalizedMessage());
         }
+        
+        int book_id = output.getId();
 
         /** 3) 결과를 확인하기 위한 JSON 출력 */
         Map<String, Object> map = new HashMap<String, Object>();
         map.put("item", output);
+        
+        
+        //저장 객체 생성 
+       	Users_books input2 = new Users_books();
+       	input2.setUser_id(user_id);
+       	input2.setBook_id(book_id);
+       	// 데이터 저장 Users_books
+       	try {
+            
+            booksService.addBooks2(input2);
+        } catch (Exception e) {
+            return webHelper.getJsonError(e.getLocalizedMessage());
+        }
+        
+        
         return webHelper.getJsonData(map);
     }
 
