@@ -12,10 +12,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.ui.Model;
 
 import study.spring.hellobook.helper.MailHelper;
 import study.spring.hellobook.helper.RegexHelper;
@@ -55,31 +53,6 @@ public class UsersRestController {
 	/** "/프로젝트이름" 에 해당하는 ContextPath 변수 주입 */
 	@Value("#{servletContext.contextPath}")
 	String contextPath;
-
-	/** 아이디 중복 검사 */
-	@RequestMapping(value = "/users/id_check.do", method = RequestMethod.POST)
-	public Map<String, Object> id_check(Model model, @RequestParam(value = "email", defaultValue = "") String email) {
-
-		/** 1) 아이디 조회를 위해 Bean에 담는다 */
-		Users input = new Users();
-		input.setEmail(email);
-
-		// 조회된 결과를 확인하기 위한 객체
-		int output = 0;
-
-		try {
-			output = userService.getIdItem(input);
-		} catch (Exception e) {
-			return webHelper.getJsonError(e.getLocalizedMessage());
-		}
-
-		/** 2) JSON 출력하기 */
-		Map<String, Object> data = new HashMap<String, Object>();
-		data.put("item", output);
-
-		return webHelper.getJsonData(data);
-
-	}
 
 	/** 회원가입 작성 폼에 대한 action 페이지 */
 	@RequestMapping(value = "/join", method = RequestMethod.POST)
@@ -150,7 +123,7 @@ public class UsersRestController {
 	}
 
 	/** 로그인 아이디, 패스워드 확인 */
-	@RequestMapping(value = "/users/login_ok.do", method = RequestMethod.POST)
+	@RequestMapping(value = "/login", method = RequestMethod.POST)
 	public Map<String, Object> login_post(HttpServletRequest request, @RequestBody Users user) {
 
 		/** 사용자가 입력한 파라미터 유효성 검사 */
@@ -245,9 +218,8 @@ public class UsersRestController {
 	}
 
 	/** 개인 정보 수정 */
-	@RequestMapping(value = "/users/usersRevise_ok", method = RequestMethod.PUT)
-	public Map<String, Object> users_revise(HttpServletRequest request,
-			@RequestBody Users user) {
+	@RequestMapping(value = "/users", method = RequestMethod.PUT)
+	public Map<String, Object> users_revise(HttpServletRequest request, @RequestBody Users user) {
 
 		/** 파라미터에 대한 유효성 검사 */
 
@@ -267,93 +239,69 @@ public class UsersRestController {
 		if (!regexHelper.isValue(user.getNickname())) {
 			return webHelper.getJsonWarning("닉네임을 입력해주세요.");
 		}
-
-		/** 데이터 조회하기 */
-		Users input = new Users();
-
-		input.setId(id);
-		input.setNickname(user.getNickname());
-		input.setAddress(user.getAddress());
-
-		Users output = null;
-
-		try {
-			// 데이터 수정
-			userService.usersRevise(input);
-
-			// 수정 결과 조회
-			output = userService.getUserItem(input);
-
-		} catch (Exception e) {
-			return webHelper.getJsonError(e.getLocalizedMessage());
-		}
-
-		/** 결과를 확인하기 위한 JSON 출력 */
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("item", output);
-		return webHelper.getJsonData(map);
-
-	}
-
-	/** 개인 정보 수정 (비밀번호, 전화번호) */
-	@RequestMapping(value = "/users/usersInfoRevise_ok", method = RequestMethod.PUT)
-	public Map<String, Object> usersInfo_revise(HttpServletRequest request,
-			@RequestBody Auth auth) {
-
-		/** 파라미터에 대한 유효성 검사 */
-
-		// 로그인 여부 확인 -> 로그인 중 일때 : id!=0 / 로그인 하지 않았을때 : id ==0
-		HttpSession session = request.getSession();
-		int id = 0;
-		if (session.getAttribute("my_session") != null) {
-			id = (int) session.getAttribute("my_session");
-		}
-
-		if (id == 0) {
-			return webHelper.getJsonWarning("사용자 번호가 없습니다.");
-		}
-		if (!regexHelper.isValue(auth.getPw())) {
+		if (!regexHelper.isValue(user.getPw())) {
 			return webHelper.getJsonWarning("새로운 비밀번호를 입력해주세요.");
 		}
-		if (!regexHelper.isValue(auth.getTel())) {
+		if (!regexHelper.isValue(user.getTel())) {
 			return webHelper.getJsonWarning("전화번호를 입력해주세요.");
 		}
 
-		/** 데이터 조회하기 */
-		Auth input = new Auth();
+			/** 데이터 조회하기 */
+			Users input = new Users();
 
-		input.setUser_id(id);
-		// 비밀번호 암호화
-		String pw = pwdEncoder.encode(auth.getPw());
-		input.setPw(pw);
-		input.setTel(auth.getTel());
+			input.setId(id);
+			input.setNickname(user.getNickname());
+			input.setAddress(user.getAddress());
 
-		Users output = null;
+			Users output = null;
 
-		try {
-			// 데이터 수정
-			userService.usersInfoRevise(input);
+			try {
+				// 데이터 수정
+				userService.usersRevise(input);
 
-			int userid = input.getUser_id();
-			Users updateinput = new Users();
-			updateinput.setId(userid);
+				// 수정 결과 조회
+				output = userService.getUserItem(input);
 
-			// 수정 결과 조회
-			output = userService.getUserItem(updateinput);
+			} catch (Exception e) {
+				return webHelper.getJsonError(e.getLocalizedMessage());
+			}
 
-		} catch (Exception e) {
-			return webHelper.getJsonError(e.getLocalizedMessage());
-		}
+			/** 데이터 조회하기 (비밀번호, 전화번호) */
+			Auth input2 = new Auth();
 
-		/** 결과를 확인하기 위한 JSON 출력 */
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("item", output);
-		return webHelper.getJsonData(map);
+			input2.setUser_id(id);
+			// 비밀번호 암호화
+			String pw = pwdEncoder.encode(user.getPw());
+			input2.setPw(pw);
+			input2.setTel(user.getTel());
+
+			Users output2 = null;
+
+			try {
+				// 데이터 수정
+				userService.usersInfoRevise(input2);
+
+				int userid = input2.getUser_id();
+				Users updateinput = new Users();
+				updateinput.setId(userid);
+
+				// 수정 결과 조회
+				output2 = userService.getUserItem(updateinput);
+
+			} catch (Exception e) {
+				return webHelper.getJsonError(e.getLocalizedMessage());
+			}
+
+			/** 결과를 확인하기 위한 JSON 출력 */
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("item", output);
+			map.put("item2", output2);
+			return webHelper.getJsonData(map);
 
 	}
 
 	/** 비밀번호 찾기 - 이메일 발송 */
-	@RequestMapping(value = "/users/pwfind_ok.do", method = RequestMethod.POST)
+	@RequestMapping(value = "/users/pwfind", method = RequestMethod.POST)
 	public Map<String, Object> pw_find(@RequestBody Users user) {
 
 		if (!regexHelper.isValue(user.getEmail())) {
@@ -408,5 +356,5 @@ public class UsersRestController {
 		data.put("item", output);
 		return webHelper.getJsonData(data);
 	}
-	
+
 }
