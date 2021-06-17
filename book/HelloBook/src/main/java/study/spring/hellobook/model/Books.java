@@ -29,8 +29,13 @@ public class Books {
     private String img;
     /** 저장한 유저*/
     private int user_id;
-    
 
+
+ // 2) JOIN절에 따른 추가 컬럼
+    /**이메일 (users와 join)*/
+    private String email;
+    /**별명 (users와 join)*/
+    private String nickname;
 
     // 3) 페이지 구현을 위한 static 변수
     /** LIMIT 절에서 사용할 조회 시작 위치 */
