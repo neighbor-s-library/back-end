@@ -39,7 +39,5 @@
 			<beans:bean id="appInterceptor" class="study.spring.hellobook.interceptor.AppInterceptor" />
 		</interceptor>
 	</interceptors>
-	
-	
-	
+	<beans:import resource="classpath:config/cors-config.xml"/>
 </beans:beans>

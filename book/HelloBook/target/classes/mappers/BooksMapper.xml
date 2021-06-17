@@ -19,18 +19,45 @@
         <result property="hide"  		column="hide" />
         <result property="img"  		column="img" />
         <result property="user_id"  	column="user_id" />
+        <result property="email"  		column="email" />
+        <result property="nickname"  	column="nickname" />
         
     </resultMap>
 
     <!-- 단일행 조회를 위한 기능 정의 -->
     <select id="selectItem" parameterType="study.spring.hellobook.model.Books" resultMap="booksMap">
-        SELECT id, title, writer, pub, detail,genre, created_at, updated_at, isrent, hide, img, user_id
-        FROM books 
-        WHERE id=#{id}
+        
+        SELECT b.id, title, writer, pub, detail, genre, b.created_at, b.updated_at, 
+        isrent, hide, img, user_id, email, nickname
+        FROM books b 
+        INNER JOIN users u 
+        ON b.user_id=u.id 
+        WHERE b.id = #{id}
+        
     </select>
 
     <!-- 다중행 조회를 위한 기능 정의 -->
     <select id="selectList" parameterType="study.spring.hellobook.model.Books" resultMap="booksMap">
+        SELECT b.id, title, writer, pub, detail, genre, b.created_at, b.updated_at, 
+        isrent, hide, img, user_id, email, nickname
+        FROM books b 
+        INNER JOIN users u 
+        ON b.user_id=u.id 
+
+        <where>
+            <if test="title != null and title != ''">
+                title LIKE concat('%', #{title}, '%')
+            </if>
+        </where>
+
+        ORDER BY id DESC
+
+        <if test="listCount > 0">
+            LIMIT #{offset}, #{listCount}
+        </if>
+    </select>
+    <!-- 다중행 조회를 위한 기능 정의 -->
+    <select id="selectListOfUser" parameterType="study.spring.hellobook.model.Books" resultMap="booksMap">
         SELECT id, title, writer, pub, detail,genre, created_at, updated_at, isrent, hide, img, user_id
         FROM books 
 

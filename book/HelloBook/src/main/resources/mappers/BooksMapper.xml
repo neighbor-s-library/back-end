@@ -38,8 +38,11 @@
 
     <!-- 다중행 조회를 위한 기능 정의 -->
     <select id="selectList" parameterType="study.spring.hellobook.model.Books" resultMap="booksMap">
-        SELECT id, title, writer, pub, detail,genre, created_at, updated_at, isrent, hide, img, user_id
-        FROM books 
+        SELECT b.id, title, writer, pub, detail, genre, b.created_at, b.updated_at, 
+        isrent, hide, img, user_id, email, nickname
+        FROM books b 
+        INNER JOIN users u 
+        ON b.user_id=u.id 
 
         <where>
             <if test="title != null and title != ''">
