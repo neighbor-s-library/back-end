@@ -3,7 +3,6 @@ package study.spring.hellobook.service;
 import java.util.List;
 
 import study.spring.hellobook.model.Books;
-import study.spring.hellobook.model.Users_books;
 
 public interface BooksService {
     /**
@@ -37,7 +36,6 @@ public interface BooksService {
      * @throws Exception
      */
     public int addBooks(Books input) throws Exception;
-    public int addBooks2(Users_books input) throws Exception;
 
     /**
      * 도서 데이터 수정하기

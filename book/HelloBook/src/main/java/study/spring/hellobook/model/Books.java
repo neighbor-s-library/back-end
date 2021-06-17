@@ -27,6 +27,8 @@ public class Books {
     private String hide;
     /** 이미지 파일의 저장위치*/
     private String img;
+    /** 저장한 유저*/
+    private int user_id;
     
 
 

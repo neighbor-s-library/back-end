@@ -18,18 +18,20 @@
         <result property="isrent"  		column="isrent" />
         <result property="hide"  		column="hide" />
         <result property="img"  		column="img" />
+        <result property="user_id"  	column="user_id" />
+        
     </resultMap>
 
     <!-- 단일행 조회를 위한 기능 정의 -->
     <select id="selectItem" parameterType="study.spring.hellobook.model.Books" resultMap="booksMap">
-        SELECT id, title, writer, pub, detail,genre, created_at, updated_at, isrent, hide, img 
+        SELECT id, title, writer, pub, detail,genre, created_at, updated_at, isrent, hide, img, user_id
         FROM books 
         WHERE id=#{id}
     </select>
 
     <!-- 다중행 조회를 위한 기능 정의 -->
     <select id="selectList" parameterType="study.spring.hellobook.model.Books" resultMap="booksMap">
-        SELECT id, title, writer, pub, detail,genre, created_at, updated_at, isrent, hide, img 
+        SELECT id, title, writer, pub, detail,genre, created_at, updated_at, isrent, hide, img, user_id
         FROM books 
 
         <where>
@@ -61,19 +63,12 @@
     <insert id="insertItem" parameterType="study.spring.hellobook.model.Books" 
 	useGeneratedKeys="true" keyProperty="id">
         INSERT INTO books (
-           title, writer, pub, detail, genre, created_at
+           title, writer, pub, detail, genre, created_at, user_id
         ) VALUES (
-            #{title}, #{writer}, #{pub}, #{detail}, #{genre}, now()
+            #{title}, #{writer}, #{pub}, #{detail}, #{genre}, now(), #{user_id}
         )
     </insert>
-    <insert id="insertItem2" parameterType="study.spring.hellobook.model.Users_books" 
-	useGeneratedKeys="true" >
-        INSERT INTO users_books (
-          user_id, book_id
-        ) VALUES (
-            #{user_id}, #{book_id}
-        )
-    </insert>
+    
     
     
     <!-- 데이터 삭제를 위한 기능 정의 -->

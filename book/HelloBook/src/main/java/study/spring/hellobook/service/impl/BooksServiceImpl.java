@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 
 import lombok.extern.slf4j.Slf4j;
 import study.spring.hellobook.model.Books;
-import study.spring.hellobook.model.Users_books;
 import study.spring.hellobook.service.BooksService;
 
 @Service
@@ -120,26 +119,7 @@ public class BooksServiceImpl implements BooksService {
 
         return result;
     }
-    @Override
-    public int addBooks2(Users_books input) throws Exception {
-        int result = 0;
-
-        try {
-            result = sqlSession.insert("BooksMapper.insertItem2", input);
-
-            if (result == 0) {
-                throw new NullPointerException("result=0");
-            }
-        }  catch (NullPointerException e) {
-            log.error(e.getLocalizedMessage());
-            throw new Exception("저장된 데이터가 없습니다.");
-        } catch (Exception e) {
-            log.error(e.getLocalizedMessage());
-            throw new Exception("데이터 저장에 실패했습니다.");
-        }
-
-        return result;
-    }
+    
 
     /**
      * 도서 데이터 수정하기
