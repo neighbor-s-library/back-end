@@ -1,5 +1,0 @@
-INDEX VERSION 1.131
-/Users/kimhyeji/Desktop/book/.metadata/.plugins/org.eclipse.jst.jsp.core/jspsearch/885416591.index
-/HelloBook/src/main/java
-/Users/kimhyeji/Desktop/teamproject/book/.metadata/.plugins/org.eclipse.jst.jsp.core/jspsearch/885416591.index
-/HelloBook/src/main/java
