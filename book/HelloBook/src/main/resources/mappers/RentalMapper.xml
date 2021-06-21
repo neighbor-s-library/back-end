@@ -9,6 +9,7 @@
 		<result property="book_id"    column="book_id" />
 		<result property="owner_id"   column="owner_id" />
 		<result property="renter_id"  column="renter_id" />
+		<result property="isrent"     column="isrent" />
 		<result property="returndate" column="returndate" />
 		<result property="created_at" column="created_at" />
 		<result property="updated_at" column="updated_at" />
@@ -55,16 +56,21 @@
 		VALUES(#{book_id}, #{owner_id}, #{renter_id}, #{returndate})
 	</insert>
 	
-	<!-- 반납일정 수정을 위한 기능 정의 -->
-	<update id = "updateItem"
+	<!-- 대여관련 수정을 위한 기능 정의 -->
+	<update id = "updateRentalState"
 	parameterType = "study.spring.hellobook.model.Rental">
-		UPDATE users SET
+		UPDATE rental SET
 		returndate = #{returndate},
-		updated_at = #{updated_at},
+		isrent = #{isrent},
+		updated_at = now()
 		WHERE id = #{id}
 	</update>
-	
-	
+
+	<!-- 대여상태 수정 후 조회를 위한 기능 정의 -->
+	<select id="selectBookState"
+        parameterType="study.spring.hellobook.model.Rental" resultMap="rentalMapper">
+        SELECT * FROM rental WHERE id = #{id}
+    </select>
 	
 
 </mapper>

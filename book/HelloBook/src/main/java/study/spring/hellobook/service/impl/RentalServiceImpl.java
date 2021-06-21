@@ -56,9 +56,6 @@ public class RentalServiceImpl implements RentalService {
             if (result == null) {
                 throw new NullPointerException("result=null");
             }
-        } catch (NullPointerException e) {
-            log.error(e.getLocalizedMessage());
-            throw new Exception("조회된 데이터가 없습니다.");
         } catch (Exception e) {
             log.error(e.getLocalizedMessage());
             throw new Exception("데이터 조회에 실패했습니다.");
@@ -103,9 +100,6 @@ public class RentalServiceImpl implements RentalService {
             if (result == null) {
                 throw new NullPointerException("result=null");
             }
-        } catch (NullPointerException e) {
-            log.error(e.getLocalizedMessage());
-            throw new Exception("조회된 데이터가 없습니다.");
         } catch (Exception e) {
             log.error(e.getLocalizedMessage());
             throw new Exception("데이터 조회에 실패했습니다.");
@@ -140,17 +134,18 @@ public class RentalServiceImpl implements RentalService {
 		return result;
 	}
 
+
 	/**
-	 * 반납일정 수정
+	 * 반납상태 수정
 	 * @param Rental 수정할 데이터를 담고 있는 Beans
 	 * @return int
 	 * @throws Exception
 	 */
 	@Override
-	public int updateItem(Rental input) throws Exception {
+	public int updateState(Rental input) throws Exception {
 		int result = 0;
 		try {
-			result= sqlSession.update("RentalMapper.updateItem", input);
+			result= sqlSession.update("RentalMapper.updateRentalState", input);
 
 			if(result == 0) {
 				throw new NullPointerException("result == 0");
@@ -163,6 +158,32 @@ public class RentalServiceImpl implements RentalService {
 				throw new Exception("데이터 조회에 실패했습니다.");
 			}
 			return result;
+	}
+
+	/**
+	 * Rental 데이터 상세 조회 (id로 조회)
+	 * @param Rental 조회할 사용자의 일련번호를 담고 있는 Beans
+	 * @return 조회된 데이터가 저장된 Beans
+	 * @throws Exception
+	 */
+	@Override
+	public Rental getRentalItem(Rental input) throws Exception {
+		Rental result = null;
+
+		try {
+			result = sqlSession.selectOne("RentalMapper.selectBookState", input);
+
+			if (result == null) {
+				throw new NullPointerException("result=null");
+			}
+		} catch (NullPointerException e) {
+			log.error(e.getLocalizedMessage());
+			throw new Exception("조회된 데이터가 없습니다.");
+		} catch (Exception e) {
+			log.error(e.getLocalizedMessage());
+			throw new Exception("데이터 조회에 실패했습니다.");
+		}
+		return result;
 	}
 
 }

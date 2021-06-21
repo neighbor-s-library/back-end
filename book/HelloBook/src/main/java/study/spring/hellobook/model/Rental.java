@@ -9,6 +9,7 @@ public class Rental {
 	private int book_id;
 	private int owner_id;
 	private int renter_id;
+	private String isrent;
 	private String created_at;
 	private String returndate;
 	private String updated_at;
