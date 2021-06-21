@@ -115,15 +115,9 @@ public class BooksRestController {
 
     /** 작성 폼에 대한 action 페이지 */
     @RequestMapping(value = "/books", method = RequestMethod.POST)
-    public Map<String, Object> post(HttpServletRequest request,
-    		 @RequestParam(value="id", defaultValue = "0") int user_id,//사용자의 ID
+    public Map<String, Object> post(
     		 @RequestBody Books books ) {
-    	// 로그인 여부 확인 -> 로그인 중 일때 : id!=0 / 로그인 하지 않았을때 : id ==0
-    		HttpSession session = request.getSession();
-    		if (session.getAttribute("my_session") != null
-    		) {
-    		user_id = (int) session.getAttribute("my_session");
-    		}
+    	
         /** 1) 사용자가 입력한 파라미터에 대한 유효성 검사 */
         // 일반 문자열 입력 컬럼 --> String으로 파라미터가 선언되어 있는 경우는 값이 입력되지 않으면 빈 문자열로 처리된다.
         if (!regexHelper.isValue(books.getTitle()))    { return webHelper.getJsonWarning("도서 이름을 입력하세요."); }
@@ -133,6 +127,7 @@ public class BooksRestController {
         /** 2) 데이터 저장하기 */
         // 저장할 값들을 Beans에 담는다.
         Books input = new Books();
+        
         input.setTitle(books.getTitle());
         input.setWriter(books.getWriter());
         input.setGenre(books.getGenre());
@@ -140,7 +135,7 @@ public class BooksRestController {
         input.setDetail(books.getDetail());
         input.setImg(books.getImg());
         input.setCreated_at(books.getCreated_at());
-        input.setUser_id(user_id);
+        input.setUser_id(books.getUser_id());
 
         // 저장된 결과를 조회하기 위한 객체
         Books output = null;
@@ -160,8 +155,6 @@ public class BooksRestController {
         /** 3) 결과를 확인하기 위한 JSON 출력 */
         Map<String, Object> map = new HashMap<String, Object>();
         map.put("item", output);
-        
-        
         
         
         return webHelper.getJsonData(map);

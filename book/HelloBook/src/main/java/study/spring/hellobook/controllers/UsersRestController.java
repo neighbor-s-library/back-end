@@ -9,6 +9,7 @@ import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -19,7 +20,9 @@ import study.spring.hellobook.helper.MailHelper;
 import study.spring.hellobook.helper.RegexHelper;
 import study.spring.hellobook.helper.WebHelper;
 import study.spring.hellobook.model.Auth;
+import study.spring.hellobook.model.Books;
 import study.spring.hellobook.model.Users;
+import study.spring.hellobook.service.JwtService;
 import study.spring.hellobook.service.UsersService;
 
 @RestController
@@ -40,6 +43,9 @@ public class UsersRestController {
 	/** Service 패턴 구현체 주입 */
 	@Autowired
 	UsersService userService;
+
+	@Autowired
+	JwtService jwtService;
 
 	/** Spring Security 주입 */
 	@Autowired
@@ -122,9 +128,13 @@ public class UsersRestController {
 		return webHelper.getJsonData(map);
 	}
 
-	/** 로그인 아이디, 패스워드 확인 */
+	/**
+	 * 로그인 아이디, 패스워드 확인
+	 * 
+	 * @throws Exception
+	 */
 	@RequestMapping(value = "/login", method = RequestMethod.POST)
-	public Map<String, Object> login_post(HttpServletRequest request, @RequestBody Users user) {
+	public Map<String, Object> login_post(HttpServletRequest request, @RequestBody Users user) throws Exception {
 
 		/** 사용자가 입력한 파라미터 유효성 검사 */
 		if (!regexHelper.isValue(user.getEmail())) {
@@ -192,6 +202,20 @@ public class UsersRestController {
 			return webHelper.getJsonError("비밀번호가 잘못되었습니다.");
 		}
 
+		/** 토큰을 생성 */
+		Users inputToken = new Users();
+
+		String jwt = jwtService.createToken(input.getEmail());
+
+		inputToken.setToken(jwt);
+		inputToken.setEmail(idoutput.getEmail());
+		/** 토큰을 user table의 token 칼럼에 저장 */
+		try {
+			userService.usersTokenUpdate(inputToken);
+
+		} catch (Exception e) {
+			return webHelper.getJsonError(e.getLocalizedMessage());
+		}
 		// 결과를 저장할 빈즈
 		Users output = new Users();
 
@@ -203,10 +227,10 @@ public class UsersRestController {
 			return webHelper.getJsonError(e.getLocalizedMessage());
 
 		}
-
 		/** 3)JSON 출력하기 */
 		Map<String, Object> data = new HashMap<String, Object>();
 		data.put("item", output);
+		data.put("token", jwt);
 		return webHelper.getJsonData(data);
 	}
 
@@ -216,6 +240,8 @@ public class UsersRestController {
 		session.invalidate();
 		return "redirect:/";
 	}
+
+	
 
 	/** 개인 정보 수정 */
 	@RequestMapping(value = "/users", method = RequestMethod.PUT)
@@ -246,57 +272,57 @@ public class UsersRestController {
 			return webHelper.getJsonWarning("전화번호를 입력해주세요.");
 		}
 
-			/** 데이터 조회하기 */
-			Users input = new Users();
+		/** 데이터 조회하기 */
+		Users input = new Users();
 
-			input.setId(id);
-			input.setNickname(user.getNickname());
-			input.setAddress(user.getAddress());
+		input.setId(id);
+		input.setNickname(user.getNickname());
+		input.setAddress(user.getAddress());
 
-			Users output = null;
+		Users output = null;
 
-			try {
-				// 데이터 수정
-				userService.usersRevise(input);
+		try {
+			// 데이터 수정
+			userService.usersRevise(input);
 
-				// 수정 결과 조회
-				output = userService.getUserItem(input);
+			// 수정 결과 조회
+			output = userService.getUserItem(input);
 
-			} catch (Exception e) {
-				return webHelper.getJsonError(e.getLocalizedMessage());
-			}
+		} catch (Exception e) {
+			return webHelper.getJsonError(e.getLocalizedMessage());
+		}
 
-			/** 데이터 조회하기 (비밀번호, 전화번호) */
-			Auth input2 = new Auth();
+		/** 데이터 조회하기 (비밀번호, 전화번호) */
+		Auth input2 = new Auth();
 
-			input2.setUser_id(id);
-			// 비밀번호 암호화
-			String pw = pwdEncoder.encode(user.getPw());
-			input2.setPw(pw);
-			input2.setTel(user.getTel());
+		input2.setUser_id(id);
+		// 비밀번호 암호화
+		String pw = pwdEncoder.encode(user.getPw());
+		input2.setPw(pw);
+		input2.setTel(user.getTel());
 
-			Users output2 = null;
+		Users output2 = null;
 
-			try {
-				// 데이터 수정
-				userService.usersInfoRevise(input2);
+		try {
+			// 데이터 수정
+			userService.usersInfoRevise(input2);
 
-				int userid = input2.getUser_id();
-				Users updateinput = new Users();
-				updateinput.setId(userid);
+			int userid = input2.getUser_id();
+			Users updateinput = new Users();
+			updateinput.setId(userid);
 
-				// 수정 결과 조회
-				output2 = userService.getUserItem(updateinput);
+			// 수정 결과 조회
+			output2 = userService.getUserItem(updateinput);
 
-			} catch (Exception e) {
-				return webHelper.getJsonError(e.getLocalizedMessage());
-			}
+		} catch (Exception e) {
+			return webHelper.getJsonError(e.getLocalizedMessage());
+		}
 
-			/** 결과를 확인하기 위한 JSON 출력 */
-			Map<String, Object> map = new HashMap<String, Object>();
-			map.put("item", output);
-			map.put("item2", output2);
-			return webHelper.getJsonData(map);
+		/** 결과를 확인하기 위한 JSON 출력 */
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("item", output);
+		map.put("item2", output2);
+		return webHelper.getJsonData(map);
 
 	}
 

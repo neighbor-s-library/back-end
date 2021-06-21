@@ -14,6 +14,7 @@
         <result property="nickname"       column="nickname" />
         <result property="created_at"     column="created_at" />
         <result property="updated_at"     column="updated_at" />
+        <result property="token"		  column="token" />
     </resultMap>
     
     <!-- Beans의 멤버변수(property)이름과 대상 테이블의 컬럼(column)을 연결한다. -->
@@ -79,9 +80,21 @@
 		UPDATE users SET
 		address = #{address},
 		nickname = #{nickname},
-		updated_at = now()
+		updated_at = now(),
 		WHERE id = #{id}
 	</update>
+	<!-- 토큰 업데이트 하기 -->
+	<update id = "usersToken"
+	parameterType = "study.spring.hellobook.model.Users">
+	UPDATE users SET
+	token = #{token}
+	WHERE email = #{email}
+	</update>
+	 <!-- 토큰 조회를 위한 기능 정의 -->
+    <select id="checkToken" parameterType="study.spring.hellobook.model.Users"
+        resultMap="usersMapper">
+        SELECT token FROM users WHERE email=#{email};
+    </select>
 	
 	<!-- 개인정보 수정하기  -->
 	<update id = "usersInfoRevise"

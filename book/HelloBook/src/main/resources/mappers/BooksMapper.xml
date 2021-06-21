@@ -90,9 +90,9 @@
     <insert id="insertItem" parameterType="study.spring.hellobook.model.Books" 
 	useGeneratedKeys="true" keyProperty="id">
         INSERT INTO books (
-           title, writer, pub, detail, genre, created_at, user_id
+           title, writer, pub, detail, genre, created_at, user_id, img
         ) VALUES (
-            #{title}, #{writer}, #{pub}, #{detail}, #{genre}, now(), #{user_id}
+            #{title}, #{writer}, #{pub}, #{detail}, #{genre}, now(), #{user_id}, #{img}
         )
     </insert>
     

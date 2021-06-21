@@ -86,5 +86,18 @@ public interface UsersService {
 	 * @throws Exception
 	 */
 	public int usersInfoRevise(Auth input) throws Exception;
-	
+	/**
+	 * 사용자 정보 수정 (토큰)
+	 * @param Users 수정할 데이터를 담고 있는 Beans
+	 * @return int
+	 * @throws Exception
+	 */
+	public int usersTokenUpdate(Users input) throws Exception;
+	/**
+	 * 사용자 토큰 확인
+	 * @param Users 수정할 데이터를 담고 있는 Beans
+	 * @return Users
+	 * @throws Exception
+	 */
+	public Users usersTokenVerify(Users input) throws Exception;
 }

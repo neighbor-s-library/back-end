@@ -17,5 +17,6 @@ public class Users {
 	//Auth
 	private String pw;
 	private String tel;
+	private String token;
 	
 }
