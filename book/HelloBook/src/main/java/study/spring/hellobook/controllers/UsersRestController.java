@@ -10,6 +10,7 @@ import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -231,6 +232,44 @@ public class UsersRestController {
 		Map<String, Object> data = new HashMap<String, Object>();
 		data.put("item", output);
 		data.put("token", jwt);
+		return webHelper.getJsonData(data);
+	}
+	
+	/** 내 정보 조회 */
+	@RequestMapping(value = "/users/{id}", method = RequestMethod.GET)
+	public Map<String, Object> mypage(@PathVariable("id") int id,
+									  @RequestHeader("Token") String token) throws Exception {
+
+		//jwt 유효성 검사
+				Map<String, Object> claimMap = null;
+				try {
+					claimMap = jwtService.verifyJWT(token);
+				} catch (UnsupportedEncodingException e1) {
+					e1.printStackTrace();
+				}
+
+		/** 입력값 일치 확인하기 */
+		// 받아온 id값으로 정보 조회
+		Users input = new Users();
+		input.setId(id);
+		Users idoutput = new Users();
+
+		try {
+			// 결과 조회
+			idoutput = userService.getUserItem(input);
+
+			if (idoutput == null) {
+				return webHelper.getJsonError("존재하지 않는 사용자 번호 입니다.");
+			}
+
+		} catch (Exception e) {
+			return webHelper.getJsonError(e.getLocalizedMessage());
+		}
+
+		/** 3)JSON 출력하기 */
+		Map<String, Object> data = new HashMap<String, Object>();
+		data.put("item",idoutput);
+		data.putAll(claimMap);
 		return webHelper.getJsonData(data);
 	}
 

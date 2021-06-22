@@ -114,11 +114,16 @@ public class RentalRestController {
 		// 저장된 결과를 조회하기 위한 객체
 		List<Rental> output_owner = null;
 		List<Rental> output_renter = null;
+		int ownerCounterBook = 0;
+		int reterCounterBook = 0;
 
 		try {
 				// 데이터 조회
 			output_owner = rentalService.getOwnerList(input);
 			output_renter = rentalService.getRenterList(input);
+			ownerCounterBook = rentalService.getOwnersBookCount(input);
+			reterCounterBook = rentalService.getRentersBookCount(input);
+			
 			
 		} catch (Exception e) {
 			return webHelper.getJsonError(e.getLocalizedMessage());
@@ -129,6 +134,8 @@ public class RentalRestController {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("ownerList", output_owner);
 		map.put("renterList", output_renter);
+		map.put("ownerCounterBook", ownerCounterBook); // 빌려준 책 개수 조회
+		map.put("reterCounterBook", reterCounterBook); //빌린책 개수 조회
 		return webHelper.getJsonData(map);
 	}
 	

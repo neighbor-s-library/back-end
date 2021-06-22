@@ -19,7 +19,7 @@
 	<!-- 데이터 수 조회를 위한 기능 정의 -->
 	<select id="selectCountBookOwner"
         parameterType="study.spring.hellobook.model.Rental" resultType="int">
-        SELECT COUNT (*)
+        SELECT COUNT(*)
         FROM rental WHERE owner_id = #{owner_id}
     </select>
 
@@ -35,7 +35,7 @@
 	<!-- 데이터 수 조회를 위한 기능 정의 -->
 	<select id="selectCountBookRenter"
         parameterType="study.spring.hellobook.model.Rental" resultType="int">
-        SELECT COUNT (*)
+        SELECT COUNT(*)
         FROM rental WHERE renter_id = #{renter_id}
     </select>
 	
