@@ -1,5 +1,6 @@
 package study.spring.hellobook.controllers;
 
+import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -9,8 +10,8 @@ import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -20,7 +21,6 @@ import study.spring.hellobook.helper.MailHelper;
 import study.spring.hellobook.helper.RegexHelper;
 import study.spring.hellobook.helper.WebHelper;
 import study.spring.hellobook.model.Auth;
-import study.spring.hellobook.model.Books;
 import study.spring.hellobook.model.Users;
 import study.spring.hellobook.service.JwtService;
 import study.spring.hellobook.service.UsersService;
@@ -245,8 +245,19 @@ public class UsersRestController {
 
 	/** 개인 정보 수정 */
 	@RequestMapping(value = "/users", method = RequestMethod.PUT)
-	public Map<String, Object> users_revise(HttpServletRequest request, @RequestBody Users user) {
-
+	public Map<String, Object> users_revise(
+			HttpServletRequest request, 
+			@RequestBody Users user,
+			@RequestHeader("Token") String token
+			
+			) {
+		//jwt 유효성 검사
+		Map<String, Object> claimMap = null;
+		try {
+			claimMap = jwtService.verifyJWT(token);
+		} catch (UnsupportedEncodingException e1) {
+			e1.printStackTrace();
+		}
 		/** 파라미터에 대한 유효성 검사 */
 
 		// 로그인 여부 확인 -> 로그인 중 일때 : id!=0 / 로그인 하지 않았을때 : id ==0
@@ -322,6 +333,7 @@ public class UsersRestController {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("item", output);
 		map.put("item2", output2);
+		map.putAll(claimMap);
 		return webHelper.getJsonData(map);
 
 	}

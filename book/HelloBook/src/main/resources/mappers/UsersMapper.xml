@@ -80,7 +80,7 @@
 		UPDATE users SET
 		address = #{address},
 		nickname = #{nickname},
-		updated_at = now(),
+		updated_at = now()
 		WHERE id = #{id}
 	</update>
 	<!-- 토큰 업데이트 하기 -->
