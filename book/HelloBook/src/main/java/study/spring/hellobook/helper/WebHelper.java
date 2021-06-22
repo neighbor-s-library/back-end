@@ -169,12 +169,12 @@ public class WebHelper {
      * 전달받은 Map객체에 rt와 pubDate값을 추가한 후 리턴한다.
      *
      * @param statusCode    HTTP 결과코드 (200, 404, 500 등)
-     * @param rt            결과메시지 (성공일 경우 OK, 그 밖의 경우 에러메시지)
+     * @param result        결과메시지 (성공일 경우 Success, 그 밖의 경우 에러메시지)
      * @param data          JSON으로 변환할 데이터 컬렉션
      *
      * @return Map<String, Object>
      */
-    public Map<String, Object> getJsonData(int statusCode, String rt, Map<String, Object> data) {
+    public Map<String, Object> getJsonData(int statusCode, String result, Map<String, Object> data) {
         /** 1) JSON 형식 출력을 위한 HTTP 헤더 설정 */
         // JSON 형식임을 명시함
         response.setContentType("application/json");
@@ -201,7 +201,7 @@ public class WebHelper {
         Map<String, Object> map = new HashMap<String, Object>();
 
         // 결과코드 추가
-        map.put("rt", rt);
+        map.put("result", result);
 
         // 생성일시 추가
         map.put("pubDate", pubDate);
@@ -216,8 +216,8 @@ public class WebHelper {
 
     /**
      * JSON 형식으로 결과 메시지를 리턴하기 위한 메서드 오버로드
-     * HTTP 상태코드는 200으로 설정하고, 결과 메시지는 "OK"라는 값을 설정하여
-     * getJsonData(int statusCode, String rt, Map<String, Object> data)
+     * HTTP 상태코드는 200으로 설정하고, 결과 메시지는 "success"라는 값을 설정하여
+     * getJsonData(int statusCode, String result, Map<String, Object> data)
      * 를 호출한다.
      *
      * JSON으로 표현하고자 하는 컬렉션이 있을 때 사용하는 가장 일반적인 메서드이다.
@@ -227,13 +227,13 @@ public class WebHelper {
      * @return Map<String, Object>
      */
     public Map<String, Object> getJsonData(Map<String, Object> data) {
-        return this.getJsonData(200, "OK", data);
+        return this.getJsonData(200, "Success", data);
     }
 
     /**
      * JSON 형식으로 결과 메시지를 리턴하기 위한 메서드 오버로드
      * HTTP 상태코드는 200으로 설정하고, 결과 메시지는 "OK"라는 값을 설정하여
-     * getJsonData(int statusCode, String rt, Map<String, Object> data)
+     * getJsonData(int statusCode, String result, Map<String, Object> data)
      * 를 호출한다.
      *
      * JSON으로 표현하고자 하는 컬렉션이 없지만 처리 결과는 성공인 경우 사용한다.
@@ -242,7 +242,7 @@ public class WebHelper {
      * @return Map<String, Object>
      */
     public Map<String, Object> getJsonData() {
-        return this.getJsonData(200, "OK", null);
+        return this.getJsonData(200, "Success", null);
     }
 
     /**
@@ -256,8 +256,8 @@ public class WebHelper {
      *
      * @return Map<String, Object>
      */
-    public Map<String, Object> getJsonError(String rt) {
-        return this.getJsonData(500, rt, null);
+    public Map<String, Object> getJsonError(String result) {
+        return this.getJsonData(500, result, null);
     }
 
     /**
@@ -271,8 +271,8 @@ public class WebHelper {
      *
      * @return Map<String, Object>
      */
-    public Map<String, Object> getJsonWarning(String rt) {
-        return this.getJsonData(400, rt, null);
+    public Map<String, Object> getJsonWarning(String result) {
+        return this.getJsonData(400, result, null);
     }
     /**
 	 * 컨트롤러로부터 업로드 된 파일의 정보를 전달받아 지정된 위치에 저장한다.

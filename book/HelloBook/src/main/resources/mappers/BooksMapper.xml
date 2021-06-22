@@ -11,6 +11,7 @@
         <result property="title"    	column="title" />
         <result property="writer"   	column="writer" />
         <result property="pub" 			column="pub" />
+        <result property="deposit" 		column="deposit" />
         <result property="detail" 		column="detail" />
         <result property="genre" 		column="genre" />
         <result property="created_at"	column="created_at" />
@@ -27,7 +28,7 @@
     <!-- 단일행 조회를 위한 기능 정의 -->
     <select id="selectItem" parameterType="study.spring.hellobook.model.Books" resultMap="booksMap">
         
-        SELECT b.id, title, writer, pub, detail, genre, b.created_at, b.updated_at, 
+        SELECT b.id, title, deposit, writer, pub, detail, genre, b.created_at, b.updated_at, 
         isrent, hide, img, user_id, email, nickname
         FROM books b 
         INNER JOIN users u 
@@ -38,7 +39,7 @@
 
     <!-- 다중행 조회를 위한 기능 정의 -->
     <select id="selectList" parameterType="study.spring.hellobook.model.Books" resultMap="booksMap">
-        SELECT b.id, title, writer, pub, detail, genre, b.created_at, b.updated_at, 
+        SELECT b.id, title, deposit, writer, pub, detail, genre, b.created_at, b.updated_at, 
         isrent, hide, img, user_id, email, nickname
         FROM books b 
         INNER JOIN users u 
@@ -58,7 +59,7 @@
     </select>
     <!-- 다중행 조회를 위한 기능 정의 -->
     <select id="selectListOfUser" parameterType="study.spring.hellobook.model.Books" resultMap="booksMap">
-        SELECT id, title, writer, pub, detail,genre, created_at, updated_at, isrent, hide, img, user_id
+        SELECT id, title, writer, deposit, pub, detail,genre, created_at, updated_at, isrent, hide, img, user_id
         FROM books 
 
         <where>
@@ -90,7 +91,7 @@
     <insert id="insertItem" parameterType="study.spring.hellobook.model.Books" 
 	useGeneratedKeys="true" keyProperty="id">
         INSERT INTO books (
-           title, writer, pub, detail, genre, created_at, user_id, img
+           title, writer, deposit, pub, detail, genre, created_at, user_id, img
         ) VALUES (
             #{title}, #{writer}, #{pub}, #{detail}, #{genre}, now(), #{user_id}, #{img}
         )
@@ -106,7 +107,7 @@
     <!-- 데이터 갱신을 위한 기능 정의 -->
     <update id="updateItem" parameterType="study.spring.hellobook.model.Books">
         UPDATE books SET
-            title=#{title}, writer=#{writer}, pub=#{pub}, detail=#{detail}, genre=#{genre}, updated_at= now(), isrent=#{isrent}, hide=#{hide}, img=#{img}
+            title=#{title}, writer=#{writer}, deposit=#{deposit}, pub=#{pub}, detail=#{detail}, genre=#{genre}, updated_at= now(), isrent=#{isrent}, hide=#{hide}, img=#{img}
         WHERE id=#{id}
     </update>
 </mapper>

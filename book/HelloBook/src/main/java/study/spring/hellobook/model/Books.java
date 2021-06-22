@@ -29,6 +29,8 @@ public class Books {
     private String img;
     /** 저장한 유저*/
     private int user_id;
+    /** 보증금 */
+    private int deposit;
 
 
  // 2) JOIN절에 따른 추가 컬럼

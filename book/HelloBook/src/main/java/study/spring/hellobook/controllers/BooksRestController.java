@@ -4,11 +4,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -134,6 +129,7 @@ public class BooksRestController {
         input.setPub(books.getPub());
         input.setDetail(books.getDetail());
         input.setImg(books.getImg());
+        input.setDeposit(books.getDeposit());
         input.setCreated_at(books.getCreated_at());
         input.setUser_id(books.getUser_id());
 
@@ -180,6 +176,7 @@ public class BooksRestController {
         input.setPub(books.getPub());
         input.setDetail(books.getDetail());
         input.setImg(books.getImg());
+        input.setDeposit(books.getDeposit());
         input.setUpdated_at(books.getUpdated_at());
         input.setIsrent(books.getIsrent());
         input.setHide(books.getHide());
