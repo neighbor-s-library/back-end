@@ -57,6 +57,22 @@
             LIMIT #{offset}, #{listCount}
         </if>
     </select>
+    <!-- 다중행 조회를 위한 기능 정의 mybooklist-->
+    <select id="selectList2" parameterType="study.spring.hellobook.model.Books" resultMap="booksMap">
+        SELECT b.id, title, deposit, writer, pub, detail, genre, b.created_at, b.updated_at, 
+        isrent, hide, img, user_id, email, nickname
+        FROM books b 
+        INNER JOIN users u 
+        ON b.user_id=u.id 
+
+        where user_id = #{user_id}
+
+        ORDER BY id DESC
+
+        <if test="listCount > 0">
+            LIMIT #{offset}, #{listCount}
+        </if>
+    </select>
     <!-- 다중행 조회를 위한 기능 정의 -->
     <select id="selectListOfUser" parameterType="study.spring.hellobook.model.Books" resultMap="booksMap">
         SELECT id, title, writer, deposit, pub, detail,genre, created_at, updated_at, isrent, hide, img, user_id
@@ -85,6 +101,14 @@
                 title LIKE concat('%', #{title}, '%')
             </if>
         </where>
+    </select>
+    <!-- 데이터 수 조회를 위한 기능 정의 -->
+    <select id="selectCountAll2" parameterType="study.spring.hellobook.model.Books" resultType="int">
+        SELECT COUNT(*)
+        FROM books
+        WHERE user_id = #{user_id}
+
+        
     </select>
 
     <!-- 데이터 저장을 위한 기능 정의 -->

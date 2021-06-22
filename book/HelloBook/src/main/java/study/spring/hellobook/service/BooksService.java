@@ -20,6 +20,7 @@ public interface BooksService {
      * @throws Exception
      */
     public List<Books> getBooksList(Books input) throws Exception;
+    public List<Books> getBooksList2(Books input) throws Exception; // myBookList
 
     /**
      * 도서 데이터가 저장되어 있는 갯수 조회
@@ -28,6 +29,7 @@ public interface BooksService {
      * @throws Exception
      */
     public int getBooksCount(Books input) throws Exception;
+    public int getBooksCount2(Books input) throws Exception; // myBookList
 
     /**
      * 도서 데이터 등록하기

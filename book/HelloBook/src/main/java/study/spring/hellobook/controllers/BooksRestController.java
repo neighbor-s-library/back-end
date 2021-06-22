@@ -81,6 +81,52 @@ public class BooksRestController {
 
         return webHelper.getJsonData(data);
     }
+    
+    /** 목록 페이지 my book list */
+    @RequestMapping(value = "/users/books", method = RequestMethod.GET)
+    public Map<String, Object> get_MyBookList(
+            // 검색어
+            @RequestParam(value="user_id", defaultValue="0") int user_id,
+            // 페이지 구현에서 사용할 현재 페이지 번호
+            @RequestParam(value="page", defaultValue="1") int nowPage) {
+
+        /** 1) 페이지 구현에 필요한 변수값 생성 */
+        int totalCount = 0;              // 전체 게시글 수
+        int listCount  = 10;             // 한 페이지당 표시할 목록 수
+        int pageCount  = 5;              // 한 그룹당 표시할 페이지 번호 수
+
+        /** 2) 데이터 조회하기 */
+        // 조회에 필요한 조건값(검색어)를 Beans에 담는다.
+        Books input = new Books();
+        input.setUser_id(user_id);
+
+        List<Books> output = null;   // 조회결과가 저장될 객체
+        PageData pageData = null;        // 페이지 번호를 계산한 결과가 저장될 객체
+
+        try {
+            // 전체 게시글 수 조회
+            totalCount = booksService.getBooksCount2(input);
+            // 페이지 번호 계산 --> 계산결과를 로그로 출력될 것이다.
+            pageData = new PageData(nowPage, totalCount, listCount, pageCount);
+
+            // SQL의 LIMIT절에서 사용될 값을 Beans의 static 변수에 저장
+            Books.setOffset(pageData.getOffset());
+            Books.setListCount(pageData.getListCount());
+
+            // 데이터 조회하기
+            output = booksService.getBooksList2(input);
+        } catch (Exception e) {
+            return webHelper.getJsonError(e.getLocalizedMessage());
+        }
+
+        /** 3) JSON 출력하기 */
+        Map<String, Object> data = new HashMap<String, Object>();
+        data.put("keyword", user_id);
+        data.put("item", output);
+        data.put("meta", pageData);
+
+        return webHelper.getJsonData(data);
+    }
 
     /** 상세 페이지 */
     @RequestMapping(value = "/books/{id}", method = RequestMethod.GET)

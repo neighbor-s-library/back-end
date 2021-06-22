@@ -75,6 +75,27 @@ public class BooksServiceImpl implements BooksService {
 
         return result;
     }
+    @Override
+    public List<Books> getBooksList2(Books input) throws Exception {
+
+        List<Books> result = null;
+
+        try {
+            result = sqlSession.selectList("BooksMapper.selectList2", input);
+
+            if (result == null) {
+                throw new NullPointerException("result=null");
+            }
+        } catch (NullPointerException e) {
+            log.error(e.getLocalizedMessage());
+            throw new Exception("조회된 데이터가 없습니다.");
+        } catch (Exception e) {
+            log.error(e.getLocalizedMessage());
+            throw new Exception("데이터 조회에 실패했습니다.");
+        }
+
+        return result;
+    }
 
     /**
      * 도서 데이터가 저장되어 있는 갯수 조회
@@ -87,6 +108,19 @@ public class BooksServiceImpl implements BooksService {
 
         try {
             result = sqlSession.selectOne("BooksMapper.selectCountAll", input);
+        } catch (Exception e) {
+            log.error(e.getLocalizedMessage());
+            throw new Exception("데이터 조회에 실패했습니다.");
+        }
+
+        return result;
+    }
+    @Override
+    public int getBooksCount2(Books input) throws Exception {
+        int result = 0;
+
+        try {
+            result = sqlSession.selectOne("BooksMapper.selectCountAll2", input);
         } catch (Exception e) {
             log.error(e.getLocalizedMessage());
             throw new Exception("데이터 조회에 실패했습니다.");
