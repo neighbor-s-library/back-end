@@ -62,8 +62,9 @@
 ```json
 //Param
 {
+	"id" : "13",
 	"address" : "주소",
-	"nickname" : "닉네임"
+	"nickname" : "닉네임",
   "pw" : "비밀번호",
 	"tel" : "전화번호"
 }
@@ -153,7 +154,7 @@ value : 'token 값'
 
 //response
 {
-    "response": "OK",
+    "result": "Success",
     "pubDate": "2021-06-16 16:09:39"
 }
 ```
@@ -181,7 +182,7 @@ bookno 로 책 수정
 }
 //response
 {
-    "response": "OK",
+    "result": "Success",
     "pubDate": "2021-06-16 16:12:04"
 }
 ```
