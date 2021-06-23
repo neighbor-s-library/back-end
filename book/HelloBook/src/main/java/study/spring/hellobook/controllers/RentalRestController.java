@@ -52,12 +52,20 @@ public class RentalRestController {
 	public Map<String, Object> rental_book(@RequestBody Rental rental,
 			@RequestHeader("Token") String token) {
 		
-		//jwt 유효성 검사
+		if (token == null) {
+			return webHelper.getJsonWarning("토큰이 없습니다.");
+		}
+
+		// jwt 유효성 검사
 		Map<String, Object> claimMap = null;
 		try {
 			claimMap = jwtService.verifyJWT(token);
 		} catch (UnsupportedEncodingException e1) {
 			e1.printStackTrace();
+		}
+
+		if (claimMap == null) {
+			return webHelper.getJsonWarning("토큰이 유효하지 않습니다.");
 		}
 
 
@@ -69,14 +77,14 @@ public class RentalRestController {
 		input.setReturndate(rental.getReturndate());
 
 		// 저장된 결과를 조회하기 위한 객체
-		List<Rental> output = null;
+		//List<Rental> output = null;
 
 		try {
 				// 데이터 저장
 				rentalService.addItem(input);
 
 				// 데이터 조회
-				output = rentalService.getOwnerList(input);
+				//output = rentalService.getOwnerList(input);
 		} catch (Exception e) {
 			return webHelper.getJsonError(e.getLocalizedMessage());
 		}
@@ -84,8 +92,8 @@ public class RentalRestController {
 		/** 3) 결과를 확인하기 위한 페이지 연동 */
 		// 저장 결과를 확인하기 위해 데이터 저장 시 생성된 PK값을 상세 페이지로 전달해야 한다.
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("item", output);
-		map.putAll(claimMap);
+		//map.put("item", output);
+		//map.putAll(claimMap);
 		return webHelper.getJsonData(map);
 	}
 	
@@ -94,12 +102,20 @@ public class RentalRestController {
 	public Map<String, Object> rental_update(@RequestBody Rental rental,
 			@RequestHeader("Token") String token) {
 		
-		//jwt 유효성 검사
+		if (token == null) {
+			return webHelper.getJsonWarning("토큰이 없습니다.");
+		}
+
+		// jwt 유효성 검사
 		Map<String, Object> claimMap = null;
 		try {
 			claimMap = jwtService.verifyJWT(token);
 		} catch (UnsupportedEncodingException e1) {
 			e1.printStackTrace();
+		}
+
+		if (claimMap == null) {
+			return webHelper.getJsonWarning("토큰이 유효하지 않습니다.");
 		}
 
 
@@ -110,14 +126,14 @@ public class RentalRestController {
 		input.setReturndate(rental.getReturndate());
 
 		// 저장된 결과를 조회하기 위한 객체
-		Rental output = null;
+		//Rental output = null;
 
 		try {
 				// 데이터 저장
 				rentalService.updateState(input);
 
 				// 데이터 조회
-				output = rentalService.getRentalItem(input);
+				//output = rentalService.getRentalItem(input);
 		} catch (Exception e) {
 			return webHelper.getJsonError(e.getLocalizedMessage());
 		}
@@ -125,8 +141,8 @@ public class RentalRestController {
 		/** 3) 결과를 확인하기 위한 페이지 연동 */
 		// 저장 결과를 확인하기 위해 데이터 저장 시 생성된 PK값을 상세 페이지로 전달해야 한다.
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("item", output);
-		map.putAll(claimMap);
+		//map.put("item", output);
+		//map.putAll(claimMap);
 		return webHelper.getJsonData(map);
 	}
 	

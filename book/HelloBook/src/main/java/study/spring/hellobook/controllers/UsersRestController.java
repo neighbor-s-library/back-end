@@ -94,7 +94,7 @@ public class UsersRestController {
 		String pw = pwdEncoder.encode(user.getPw());
 
 		// 저장된 결과를 조회하기 위한 객체
-		Users output = null;
+		// Users output = null;
 
 		try {
 
@@ -113,7 +113,7 @@ public class UsersRestController {
 				userService.addUser2(input2);
 
 				// 데이터 조회
-				output = userService.getUserItem(input);
+				// output = userService.getUserItem(input);
 			} else {
 				return webHelper.getJsonError("이미 존재하는 이메일 입니다.");
 			}
@@ -125,7 +125,7 @@ public class UsersRestController {
 		/** 3) 결과를 확인하기 위한 페이지 연동 */
 		// 저장 결과를 확인하기 위해 데이터 저장 시 생성된 PK값을 상세 페이지로 전달해야 한다.
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("item", output);
+		// map.put("item", output);
 		return webHelper.getJsonData(map);
 	}
 
@@ -188,22 +188,22 @@ public class UsersRestController {
 		String dbpwd = userIdInput.getPw();
 
 		/** request 객체를 사용해서 세션 객체 만들기 */
-		//HttpSession session = request.getSession();
+		// HttpSession session = request.getSession();
 
 		// 입력한 비밀번호와 DB에서 가져온 비밀번호가 일치할 경우 데이터를 조회한다.
 		if (pwdEncoder.matches(user.getPw(), dbpwd)) {
 
 			// 세션 저장 처리
-			//session.setAttribute("my_session", userIdInput.getUser_id());
+			// session.setAttribute("my_session", userIdInput.getUser_id());
 			System.out.println("로그인 되었습니다.");
 
 		} else {
 			/** 조회에 실패한 경우(DB에 데이터가 존재하지 않는 경우) */
 			// 세션 삭제
-			//session.removeAttribute("my_session");
+			// session.removeAttribute("my_session");
 			return webHelper.getJsonError("비밀번호가 잘못되었습니다.");
 		}
-		
+
 		/** 토큰을 생성 */
 		Users inputToken = new Users();
 
@@ -219,37 +219,44 @@ public class UsersRestController {
 			return webHelper.getJsonError(e.getLocalizedMessage());
 		}
 
-		
 		// 결과를 저장할 빈즈
-		Users output = new Users();
+		// Users output = new Users();
 
-		try {
-			// 사용자 번호로 사용자 정보 조회
-			output = userService.getUserItem(idoutput);
-
-		} catch (Exception e) {
-			return webHelper.getJsonError(e.getLocalizedMessage());
-
-		}
+//		try {
+//			// 사용자 번호로 사용자 정보 조회
+//			output = userService.getUserItem(idoutput);
+//
+//		} catch (Exception e) {
+//			return webHelper.getJsonError(e.getLocalizedMessage());
+//
+//		}
 		/** 3)JSON 출력하기 */
 		Map<String, Object> data = new HashMap<String, Object>();
-		data.put("item", output);
+		// data.put("item", output);
 		data.put("token", jwt);
 		return webHelper.getJsonData(data);
 	}
-	
+
 	/** 내 정보 조회 */
 	@RequestMapping(value = "/users/{id}", method = RequestMethod.GET)
-	public Map<String, Object> mypage(@PathVariable("id") int id,
-									  @RequestHeader("Token") String token) throws Exception {
+	public Map<String, Object> mypage(@PathVariable("id") int id, @RequestHeader("Token") String token)
+			throws Exception {
 
-		//jwt 유효성 검사
-				Map<String, Object> claimMap = null;
-				try {
-					claimMap = jwtService.verifyJWT(token);
-				} catch (UnsupportedEncodingException e1) {
-					e1.printStackTrace();
-				}
+		if (token == null) {
+			return webHelper.getJsonWarning("토큰이 없습니다.");
+		}
+
+		// jwt 유효성 검사
+		Map<String, Object> claimMap = null;
+		try {
+			claimMap = jwtService.verifyJWT(token);
+		} catch (UnsupportedEncodingException e1) {
+			e1.printStackTrace();
+		}
+
+		if (claimMap == null) {
+			return webHelper.getJsonWarning("토큰이 유효하지 않습니다.");
+		}
 
 		/** 입력값 일치 확인하기 */
 		// 받아온 id값으로 정보 조회
@@ -271,8 +278,8 @@ public class UsersRestController {
 
 		/** 3)JSON 출력하기 */
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("item",idoutput);
-		map.putAll(claimMap);
+		 map.put("item",idoutput);
+		// map.putAll(claimMap);
 		return webHelper.getJsonData(map);
 	}
 
@@ -283,33 +290,39 @@ public class UsersRestController {
 		return "redirect:/";
 	}
 
-	
-
 	/** 개인 정보 수정 */
 	@RequestMapping(value = "/users", method = RequestMethod.PUT)
-	public Map<String, Object> users_revise(
-			HttpServletRequest request, 
-			@RequestBody Users user,
-			@RequestHeader("Token") String token
-			
-			) {
-		//jwt 유효성 검사
+	public Map<String, Object> users_revise(HttpServletRequest request, @RequestBody Users user,
+			@RequestHeader(value = "Token", required = false) String token
+
+	) {
+
+		if (token == null) {
+			return webHelper.getJsonWarning("토큰이 없습니다.");
+		}
+
+		// jwt 유효성 검사
 		Map<String, Object> claimMap = null;
 		try {
 			claimMap = jwtService.verifyJWT(token);
 		} catch (UnsupportedEncodingException e1) {
-			e1.printStackTrace();
+			e1.getMessage();
 		}
+
+		if (claimMap == null) {
+			return webHelper.getJsonWarning("토큰이 유효하지 않습니다.");
+		}
+
 		/** 파라미터에 대한 유효성 검사 */
 
 		// 로그인 여부 확인 -> 로그인 중 일때 : id!=0 / 로그인 하지 않았을때 : id ==0
-		//HttpSession session = request.getSession();
+		// HttpSession session = request.getSession();
 		int id = 0;
 //		if (session.getAttribute("my_session") != null) {
 //			id = (int) session.getAttribute("my_session");
 //		}
-		
-		if(id == 0) {
+
+		if (id == 0) {
 			id = user.getId();
 		}
 
@@ -336,14 +349,14 @@ public class UsersRestController {
 		input.setNickname(user.getNickname());
 		input.setAddress(user.getAddress());
 
-		Users output = null;
+		// Users output = null;
 
 		try {
 			// 데이터 수정
 			userService.usersRevise(input);
 
 			// 수정 결과 조회
-			output = userService.getUserItem(input);
+			// output = userService.getUserItem(input);
 
 		} catch (Exception e) {
 			return webHelper.getJsonError(e.getLocalizedMessage());
@@ -358,7 +371,7 @@ public class UsersRestController {
 		input2.setPw(pw);
 		input2.setTel(user.getTel());
 
-		Users output2 = null;
+		// Users output2 = null;
 
 		try {
 			// 데이터 수정
@@ -369,7 +382,7 @@ public class UsersRestController {
 			updateinput.setId(userid);
 
 			// 수정 결과 조회
-			output2 = userService.getUserItem(updateinput);
+			// output2 = userService.getUserItem(updateinput);
 
 		} catch (Exception e) {
 			return webHelper.getJsonError(e.getLocalizedMessage());
@@ -377,29 +390,36 @@ public class UsersRestController {
 
 		/** 결과를 확인하기 위한 JSON 출력 */
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("item", output);
-		map.put("item2", output2);
-		map.putAll(claimMap);
+		// map.put("item", output);
+		// map.put("item2", output2);
+		// map.putAll(claimMap);
 		return webHelper.getJsonData(map);
 
 	}
 
 	/** 비밀번호 찾기 - 이메일 발송 */
 	@RequestMapping(value = "/users/pwfind", method = RequestMethod.POST)
-	public Map<String, Object> pw_find(@RequestBody Users user,
-			@RequestHeader("Token") String token) {
+	public Map<String, Object> pw_find(@RequestBody Users user, @RequestHeader("Token") String token) {
 
 		if (!regexHelper.isValue(user.getEmail())) {
 			return webHelper.getJsonWarning("이메일을 입력하세요.");
 		}
-		
-		//jwt 유효성 검사
-				Map<String, Object> claimMap = null;
-				try {
-					claimMap = jwtService.verifyJWT(token);
-				} catch (UnsupportedEncodingException e1) {
-					e1.printStackTrace();
-				}
+
+		if (token == null) {
+			return webHelper.getJsonWarning("토큰이 없습니다.");
+		}
+
+		// jwt 유효성 검사
+		Map<String, Object> claimMap = null;
+		try {
+			claimMap = jwtService.verifyJWT(token);
+		} catch (UnsupportedEncodingException e1) {
+			e1.printStackTrace();
+		}
+
+		if (claimMap == null) {
+			return webHelper.getJsonWarning("토큰이 유효하지 않습니다.");
+		}
 
 		/** 1) 데이터 조회하기 */
 		// 데이터 조회에 필요한 조건을 Beans에 저장하기
@@ -446,8 +466,8 @@ public class UsersRestController {
 		}
 		/** 3)JSON 출력하기 */
 		Map<String, Object> data = new HashMap<String, Object>();
-		data.put("item", output);
-		data.putAll(claimMap);
+		//data.put("item", output);
+		//data.putAll(claimMap);
 		return webHelper.getJsonData(data);
 	}
 

@@ -205,6 +205,15 @@ public class WebHelper {
 
         // 생성일시 추가
         map.put("pubDate", pubDate);
+        
+        // 성공여부 추가
+        String successed;
+        if(statusCode != 200) {
+        	successed = "false";
+        }else {
+        	successed = "true";
+        }
+        map.put("successed", successed);
 
         // data가 전달되었다면 map에 병합한다.
         if (data != null) {
@@ -257,7 +266,7 @@ public class WebHelper {
      * @return Map<String, Object>
      */
     public Map<String, Object> getJsonError(String result) {
-        return this.getJsonData(500, result, null);
+        return this.getJsonData(500, "Fail / "+result, null); 
     }
 
     /**
@@ -272,8 +281,9 @@ public class WebHelper {
      * @return Map<String, Object>
      */
     public Map<String, Object> getJsonWarning(String result) {
-        return this.getJsonData(400, result, null);
+        return this.getJsonData(400, "Fail / "+result, null);
     }
+    
     /**
 	 * 컨트롤러로부터 업로드 된 파일의 정보를 전달받아 지정된 위치에 저장한다.
 	 * 이 때, 파일 덮어쓰기를 방지하기 위해 파일의 이름을 변경하고 이름 중복 검사를 수행한다.
