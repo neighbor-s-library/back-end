@@ -188,21 +188,22 @@ public class UsersRestController {
 		String dbpwd = userIdInput.getPw();
 
 		/** request 객체를 사용해서 세션 객체 만들기 */
-		HttpSession session = request.getSession();
+		//HttpSession session = request.getSession();
 
 		// 입력한 비밀번호와 DB에서 가져온 비밀번호가 일치할 경우 데이터를 조회한다.
 		if (pwdEncoder.matches(user.getPw(), dbpwd)) {
 
 			// 세션 저장 처리
-			session.setAttribute("my_session", userIdInput.getUser_id());
+			//session.setAttribute("my_session", userIdInput.getUser_id());
+			System.out.println("로그인 되었습니다.");
 
 		} else {
 			/** 조회에 실패한 경우(DB에 데이터가 존재하지 않는 경우) */
 			// 세션 삭제
-			session.removeAttribute("my_session");
+			//session.removeAttribute("my_session");
 			return webHelper.getJsonError("비밀번호가 잘못되었습니다.");
 		}
-
+		
 		/** 토큰을 생성 */
 		Users inputToken = new Users();
 
@@ -217,6 +218,8 @@ public class UsersRestController {
 		} catch (Exception e) {
 			return webHelper.getJsonError(e.getLocalizedMessage());
 		}
+
+		
 		// 결과를 저장할 빈즈
 		Users output = new Users();
 
@@ -267,10 +270,10 @@ public class UsersRestController {
 		}
 
 		/** 3)JSON 출력하기 */
-		Map<String, Object> data = new HashMap<String, Object>();
-		data.put("item",idoutput);
-		data.putAll(claimMap);
-		return webHelper.getJsonData(data);
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("item",idoutput);
+		map.putAll(claimMap);
+		return webHelper.getJsonData(map);
 	}
 
 	/** 로그아웃 */
@@ -300,10 +303,14 @@ public class UsersRestController {
 		/** 파라미터에 대한 유효성 검사 */
 
 		// 로그인 여부 확인 -> 로그인 중 일때 : id!=0 / 로그인 하지 않았을때 : id ==0
-		HttpSession session = request.getSession();
+		//HttpSession session = request.getSession();
 		int id = 0;
-		if (session.getAttribute("my_session") != null) {
-			id = (int) session.getAttribute("my_session");
+//		if (session.getAttribute("my_session") != null) {
+//			id = (int) session.getAttribute("my_session");
+//		}
+		
+		if(id == 0) {
+			id = user.getId();
 		}
 
 		if (id == 0) {
@@ -379,11 +386,20 @@ public class UsersRestController {
 
 	/** 비밀번호 찾기 - 이메일 발송 */
 	@RequestMapping(value = "/users/pwfind", method = RequestMethod.POST)
-	public Map<String, Object> pw_find(@RequestBody Users user) {
+	public Map<String, Object> pw_find(@RequestBody Users user,
+			@RequestHeader("Token") String token) {
 
 		if (!regexHelper.isValue(user.getEmail())) {
 			return webHelper.getJsonWarning("이메일을 입력하세요.");
 		}
+		
+		//jwt 유효성 검사
+				Map<String, Object> claimMap = null;
+				try {
+					claimMap = jwtService.verifyJWT(token);
+				} catch (UnsupportedEncodingException e1) {
+					e1.printStackTrace();
+				}
 
 		/** 1) 데이터 조회하기 */
 		// 데이터 조회에 필요한 조건을 Beans에 저장하기
@@ -431,6 +447,7 @@ public class UsersRestController {
 		/** 3)JSON 출력하기 */
 		Map<String, Object> data = new HashMap<String, Object>();
 		data.put("item", output);
+		data.putAll(claimMap);
 		return webHelper.getJsonData(data);
 	}
 

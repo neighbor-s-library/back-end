@@ -13,6 +13,14 @@
 		<result property="returndate" column="returndate" />
 		<result property="created_at" column="created_at" />
 		<result property="updated_at" column="updated_at" />
+		<result property="book_created_at" column="b.created_at" />
+	</resultMap>
+	
+	<!-- Beans의 멤버변수(property)이름과 대상 테이블의 컬럼(column)을 연결한다. -->
+	<resultMap id="BooksMapper"
+		type="study.spring.hellobook.model.Books">
+		<result property="title"           column="title" />
+		<result property="img"             column="img" />
 	</resultMap>
 	
 	<!-- =======빌려준 사람 기준 (owner_id)====== -->
@@ -26,7 +34,12 @@
 	<!-- 다중행 조회를 위한 기능 정의 -->
 	<select id="selectItemOwner" parameterType="study.spring.hellobook.model.Rental"
         resultMap="rentalMapper">
-        SELECT * FROM rental WHERE owner_id=#{owner_id};
+        SELECT r.id, r.book_id, r.owner_id, r.renter_id, r.isrent,
+        r.created_at, r.returndate, r.updated_at, b.title, b.img, b.created_at `b.created_at`
+        FROM rental r
+        INNER JOIN books b
+        ON r.owner_id = b.user_id 
+        WHERE r.owner_id=#{owner_id};
     </select>
 	
 	
@@ -42,7 +55,12 @@
 	<!-- 다중행 조회를 위한 기능 정의 -->
 	<select id="selectItemRenter" parameterType="study.spring.hellobook.model.Rental"
         resultMap="rentalMapper">
-        SELECT * FROM rental WHERE renter_id=#{renter_id};
+        SELECT r.id, r.book_id, r.owner_id, r.renter_id, r.isrent,
+        r.created_at, r.returndate, r.updated_at, b.title, b.img, b.created_at `b.created_at`
+        FROM rental r
+        INNER JOIN books b
+        ON r.owner_id = b.user_id 
+        WHERE r.renter_id=#{renter_id};
     </select>
     
     
