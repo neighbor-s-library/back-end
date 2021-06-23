@@ -117,7 +117,7 @@
         INSERT INTO books (
            title, writer, deposit, pub, detail, genre, created_at, user_id, img
         ) VALUES (
-            #{title}, #{writer}, #{pub}, #{detail}, #{genre}, now(), #{user_id}, #{img}
+            #{title}, #{writer}, #{deposit}, #{pub}, #{detail}, #{genre}, now(), #{user_id}, #{img}
         )
     </insert>
     
