@@ -166,14 +166,24 @@ public class BooksRestController {
 	/** 도서 등록 api */
 	@RequestMapping(value = "/books", method = RequestMethod.POST)
 	public Map<String, Object> post(@RequestBody Books books,
-			@RequestHeader("Token") String token) {
-
-		Map<String, Object> claimMap = null;
-		try {
-			claimMap = jwtService.verifyJWT(token);
-		} catch (UnsupportedEncodingException e1) {
-			e1.printStackTrace();
-		}
+			@RequestHeader(value = "Token", required = false) String token) {
+		if (token == null) {
+            return webHelper.getJsonWarning("토큰이 없습니다.");
+        }
+        
+        //jwt 유효성 검사
+        Map<String, Object> claimMap = null;
+        try {
+            claimMap = jwtService.verifyJWT(token);
+        } catch (UnsupportedEncodingException e1) {
+            e1.getMessage();
+        }
+        
+        if(claimMap == null) {
+            return webHelper.getJsonWarning("토큰이 유효하지 않습니다.");
+        }
+        
+		
 
 		/** 1) 사용자가 입력한 파라미터에 대한 유효성 검사 */
 		// 일반 문자열 입력 컬럼 --> String으로 파라미터가 선언되어 있는 경우는 값이 입력되지 않으면 빈 문자열로 처리된다.
@@ -217,8 +227,8 @@ public class BooksRestController {
 
 		/** 3) 결과를 확인하기 위한 JSON 출력 */
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("item", output);
-		map.putAll(claimMap);
+		//map.put("item", output);
+		//map.putAll(claimMap);
 
 		return webHelper.getJsonData(map);
 	}
@@ -226,14 +236,22 @@ public class BooksRestController {
 	/** 수정 폼에 대한 action 페이지 */
 	@RequestMapping(value = "/books", method = RequestMethod.PUT)
 	public Map<String, Object> put(@RequestBody Books books,
-			@RequestHeader("Token") String token) {
-
-		Map<String, Object> claimMap = null;
-		try {
-			claimMap = jwtService.verifyJWT(token);
-		} catch (UnsupportedEncodingException e1) {
-			e1.printStackTrace();
-		}
+			@RequestHeader(value = "Token", required = false) String token) {
+		if (token == null) {
+            return webHelper.getJsonWarning("토큰이 없습니다.");
+        }
+        
+        //jwt 유효성 검사
+        Map<String, Object> claimMap = null;
+        try {
+            claimMap = jwtService.verifyJWT(token);
+        } catch (UnsupportedEncodingException e1) {
+            e1.getMessage();
+        }
+        
+        if(claimMap == null) {
+            return webHelper.getJsonWarning("토큰이 유효하지 않습니다.");
+        }
 
 		/** 1) 사용자가 입력한 파라미터 유효성 검사 */
 		if (!regexHelper.isValue(books.getTitle())) {
@@ -275,8 +293,8 @@ public class BooksRestController {
 
 		/** 3) 결과를 확인하기 위한 JSON 출력 */
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("item", output);
-		map.putAll(claimMap);
+		//map.put("item", output);
+		//map.putAll(claimMap);
 		return webHelper.getJsonData(map);
 	}
 
