@@ -3,7 +3,7 @@
 **회원가입**
 
 - 메소드 : POST
-- url : localhost:8080/hellobook/join
+- url : /join
 - input : JSON
 - 예)
 
@@ -19,15 +19,16 @@
 
 //response
 {
-    "result": "Success",
-    "pubDate": "2021-06-15 17:05:18"
+    "result": "Success", //회원가입 결과
+    "successed": "true", //Token
+    "pubDate": "2021-06-23 17:32:16"
 }
 ```
 
 **로그인**
 
 - 메소드 : POST
-- url : localhost:8080/hellobook/login
+- url : /login
 - input : JSON
 - 예)
 
@@ -40,9 +41,10 @@
 
 //response
 {
-   "result": "Success",
-   "pubDate": "2021-06-15 17:05:18"
-    "token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VyIiwiZGF0YSI6IjEyMzQiLCJleHAiOjE2MjQ1MDQ2ODF9.maW7hxN4uXIvggNFgSttQO3lc80geYRjusTgZgFt3-4"
+    "result": "Success", //로그인 결과
+    "successed": "true", //Token
+    "pubDate": "2021-06-23 17:34:00",
+    "token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VyIiwiZGF0YSI6InRlc3RfaGpfMiIsImV4cCI6MTYyNDQ0NDQ0MH0.zS4WOU_xWyDhvz0P3FuohrCJg4ZLePBM4apumBX9114"
 }
 ```
 
@@ -56,7 +58,7 @@
 **회원정보 수정** 
 
 - 메소드 : PUT
-- url : localhost:8080/hellobook/users
+- url : /users
 - input : JSON
 - 예)
 
@@ -81,27 +83,28 @@
 ****비밀번호 변경 이메일 전송** **
 
 - 메소드 : POST
-- url : localhost:8080/hellobook/users/pwfind
+- url : /users/pwfind
 - input : JSON
 - 예)
 
 ```json
 //Param
 {
-		"email" : "이메일 (비밀번호 변경 URL이 전송된다)"
+	"email" : "이메일 (비밀번호 변경 URL이 전송된다)"
 }
 
 //response
 {
-    "result": "Success",
-    "pubDate": "2021-06-15 17:05:18"
+    "result": "Success", //이메일 전송 결과
+    "successed": "true", //Token
+    "pubDate": "2021-06-23 17:47:01"
 }
 ```
 
 **정보 조회 (point, 닉네임)** 
 
 - 메소드 : GET
-- url : localhost:8080/hellobook/users/{id}
+- url : /users/{id}
 - Input : Header에 Token 값
 - 예)
 
@@ -113,22 +116,20 @@ value : 'token 값'
 //response
 {
     "result": "Success",
-    "sub": "user",
     "item": {
-        "id": 20,
-        "email": "hyejiii",
+        "id": 23,
+        "email": "qwerty3@gmail.com",
         "point": 0,
         "address": "주소",
-        "nickname": "비밀번호1234",
+        "nickname": "닉네임1234",
         "created_at": null,
-        "updated_at": null,
+        "updated_at": "2021-06-23 17:45:49",
         "pw": null,
         "tel": null,
-        "token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VyIiwiZGF0YSI6Imh5ZWppaWkiLCJleHAiOjE2MjQzNDkxNDl9.J-3ksYNOAUg4CPlsf0uGYY5udmis3bRuRV9_U33wALc"
+        "token": null
     },
-    "data": "hyejiii",
-    "exp": 1624349149,
-    "pubDate": "2021-06-22 16:41:37"
+    "successed": "true",
+    "pubDate": "2021-06-23 17:50:04"
 }
 ```
 
@@ -137,7 +138,7 @@ value : 'token 값'
 **책 등록 (구현완료)(토큰필요)**
 
 - 메소드 : POST
-- url : localhost:8080/hellobook/books
+- url : /books
 - input : JSON
 - 예)
 
@@ -167,7 +168,7 @@ value : 'token 값'
 bookno 로 책 수정
 
 - 메소드 :PUT
-- url: http://localhost:8080/hellobook/books
+- url: /books
 - input: JSON
 
 ```json
@@ -196,7 +197,7 @@ bookno 로 책 수정
 자신의 user_id으로 본인이 등록한 책 조회
 
 - 메소드 : GET
-- url : http://localhost:8080/hellobook/users/books?user_id=
+- url : /users/books/:user_id
 - input : parameter user_id
 - output : JSON
 
@@ -248,7 +249,7 @@ bookno 로 책 수정
 검색어로 bookno 조회
 
 - 메소드 : GET
-- url : http://localhost:8080/hellobook/books/:keyword
+- url : /books/:keyword
 - input : key = keyword
 
 ```json
@@ -295,7 +296,7 @@ http://localhost:8080/hellobook/books?keyword=조
 메인 페이지 최근 등록 책 리스트 (전체 리스트)
 
 - 메소드 : GET
-- url : http://localhost:8080/hellobook/books?page={page_number}
+- url : /books?page={page_number}
 - input : 필요없음
 
 ```json
@@ -318,7 +319,7 @@ http://localhost:8080/hellobook/books?keyword=조
 특정 도서의 상세 페이지
 
 - 메소드 : GET
-- url : http://localhost:8080/hellobook/books/:book_id
+- url : /books/:book_id
 - input : 필요없음
 
 ```json
@@ -346,7 +347,7 @@ http://localhost:8080/hellobook/books/29
 **책 대여(토큰필요)**
 
 - 메소드 : POST
-- url : localhost:8080/hellobook/rental
+- url : /rental
 - input : JSON
 - 예)
 
@@ -361,15 +362,16 @@ http://localhost:8080/hellobook/books/29
 
 //response - Owner 입장에서의 빌려준 모든 책 목록
 {
-    "result": "Success",
-    "pubDate": "2021-06-21 17:15:23"
+   "result": "Success",
+    "successed": "true",
+    "pubDate": "2021-06-23 18:03:51"
 }
 ```
 
 **대여 상태 수정(토큰필요)**
 
 - 메소드 : PUT
-- url : localhost:8080/hellobook/rental
+- url : /rental
 - input : JSON
 - 예)
 
@@ -383,48 +385,66 @@ http://localhost:8080/hellobook/books/29
 
 //response
 {
-   "result": "Success",
-	 "pubDate": "2021-06-21 17:15:23"
+  "result": "Success",
+    "successed": "true",
+    "pubDate": "2021-06-23 18:13:40"
 }
 ```
 
-**대여 목록 조회** 
+**대여 목록 조회 - Owner (빌려준 목록 조회)**
 
-자신의 user_id으로 rental조회 - 개수 조회 추가 수정 완료
+자신의 user_id으로 rental조회 
 
 - 메소드 : GET
-- url : http://localhost:8080/hellobook/rental/{user_id}
+- url : http://localhost:8080/hellobook/owner/{user_id}
 - output : JSON
 
 ```json
 
 //response
 {
-	  "result": "Success",
-    "ownerList": [
+    "result": "Success",
+    "output": [    
         {
-            "id": 2,
-            "book_id": 37,
-            "owner_id": 10,
-            "renter_id": 9,
-            "isrent": "N",
-            "created_at": "2021-06-21 07:47:44",
-            "returndate": "2021-07-30",
-            "updated_at": "2021-06-21 08:15:23"
+            "title": "6",
+            "img": null,
+            "created_at": "2021-06-23 18:03:53"
+        },
+        {
+            "title": "책의 제목입니다",
+            "img": null,
+            "created_at": "2021-06-23 18:03:53"
         }
     ],
-    "renterList": [
+    "successed": "true",
+    "pubDate": "2021-06-23 18:59:48"
+}
+```
+
+**대여 목록 조회 - Renter (빌린 목록 조회)**
+
+자신의 user_id으로 rental조회
+
+- 메소드 : GET
+- url : http://localhost:8080/hellobook/renter/{user_id}
+- output : JSON
+
+```json
+
+//response
+{
+    "result": "Success",
+    "output": [
         {
-            "id": 3,
-            "book_id": 38,
-            "owner_id": 5,
-            "renter_id": 10,
-            "isrent": "Y",
-            "created_at": "2021-06-21 07:50:21",
-            "returndate": "2021-07-20"
+            "title": "제목",
+            "img": null,
+            "created_at": "2021-06-21 07:47:44"
         }
     ],
-    "pubDate": "2021-06-21 17:18:35"
-} 
+    "successed": "true",
+    "pubDate": "2021-06-23 19:14:38"
+}
+
+```
 ...
 ```
