@@ -52,7 +52,7 @@
 
 **로그아웃**
 
-- url : localhost:8080/hellobook/logout
+- url : /logout
 - input : 필요없음 front 에서 처리
 
 **회원정보 수정** 
@@ -396,7 +396,7 @@ http://localhost:8080/hellobook/books/29
 자신의 user_id으로 rental조회 
 
 - 메소드 : GET
-- url : http://localhost:8080/hellobook/owner/{user_id}
+- url : /owner/{user_id}
 - output : JSON
 
 ```json
@@ -426,7 +426,7 @@ http://localhost:8080/hellobook/books/29
 자신의 user_id으로 rental조회
 
 - 메소드 : GET
-- url : http://localhost:8080/hellobook/renter/{user_id}
+- url : /renter/{user_id}
 - output : JSON
 
 ```json
