@@ -42,6 +42,7 @@
 {
    "result": "Success",
    "pubDate": "2021-06-15 17:05:18"
+    "token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VyIiwiZGF0YSI6IjEyMzQiLCJleHAiOjE2MjQ1MDQ2ODF9.maW7hxN4uXIvggNFgSttQO3lc80geYRjusTgZgFt3-4"
 }
 ```
 
@@ -50,7 +51,7 @@
 **로그아웃**
 
 - url : localhost:8080/hellobook/logout
-- input : 필요없음
+- input : 필요없음 front 에서 처리
 
 **회원정보 수정** 
 
@@ -72,11 +73,12 @@
 //response
 {
     "result": "Success",
-    "pubDate": "2021-06-15 17:05:18"
+    "successed": "true",
+    "pubDate": "2021-06-24 10:18:47"
 }
 ```
 
-**비밀번호 변경 이메일 전송** 
+****비밀번호 변경 이메일 전송** **
 
 - 메소드 : POST
 - url : localhost:8080/hellobook/users/pwfind
@@ -155,7 +157,8 @@ value : 'token 값'
 //response
 {
     "result": "Success",
-    "pubDate": "2021-06-16 16:09:39"
+    "successed": "true",
+    "pubDate": "2021-06-24 10:21:59"
 }
 ```
 
@@ -183,7 +186,8 @@ bookno 로 책 수정
 //response
 {
     "result": "Success",
-    "pubDate": "2021-06-16 16:12:04"
+    "successed": "true",
+    "pubDate": "2021-06-24 10:21:59"
 }
 ```
 
@@ -238,29 +242,8 @@ bookno 로 책 수정
 
 - 
 
-**# 조회 2 : 특정 회원이 대여한 책 (토큰필요)**
 
-자신의 user_id으로 bookno 조회
-
-- 메소드 : GET
-- url : http://localhost:8080/hellobook/books?rent=true&user_id={id}
-- input : Paramiter
-
-```json
-{
-	"user_id" : "책 번호(primary 값)"
-}
-//response
-{
-	"title" : "제목",
-	"writer" : "지은이",
-	"pub" : "출판사",
-	"detail" : "상세설명"
-}
- ...
-```
-
-**# 조회 3 : 책 검색 (구현완료)**
+**# 조회 2 : 책 검색 (구현완료)**
 
 검색어로 bookno 조회
 
@@ -307,7 +290,7 @@ http://localhost:8080/hellobook/books?keyword=조
 ...
 ```
 
-**# 조회 4 : books list(구현완료)**
+**# 조회 3 : books list(구현완료)**
 
 메인 페이지 최근 등록 책 리스트 (전체 리스트)
 
@@ -330,7 +313,7 @@ http://localhost:8080/hellobook/books?keyword=조
 ...
 ```
 
-**# 조회 5 : 도서 상세 페이지(구현완료)**
+**# 조회 4 : 도서 상세 페이지(구현완료)**
 
 특정 도서의 상세 페이지
 
@@ -379,7 +362,7 @@ http://localhost:8080/hellobook/books/29
 //response - Owner 입장에서의 빌려준 모든 책 목록
 {
     "result": "Success",
-		"pubDate": "2021-06-21 17:15:23"
+    "pubDate": "2021-06-21 17:15:23"
 }
 ```
 
