@@ -19,8 +19,8 @@
 
 //response
 {
-    "result": "Success", //회원가입 결과
-    "successed": "true", //Token
+    "result": "Success", 
+    "successed": "true",
     "pubDate": "2021-06-23 17:32:16"
 }
 ```
@@ -41,8 +41,8 @@
 
 //response
 {
-    "result": "Success", //로그인 결과
-    "successed": "true", //Token
+    "result": "Success", 
+    "successed": "true", 
     "pubDate": "2021-06-23 17:34:00",
     "token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VyIiwiZGF0YSI6InRlc3RfaGpfMiIsImV4cCI6MTYyNDQ0NDQ0MH0.zS4WOU_xWyDhvz0P3FuohrCJg4ZLePBM4apumBX9114"
 }
@@ -95,8 +95,8 @@
 
 //response
 {
-    "result": "Success", //이메일 전송 결과
-    "successed": "true", //Token
+    "result": "Success", 
+    "successed": "true",
     "pubDate": "2021-06-23 17:47:01"
 }
 ```
@@ -152,7 +152,7 @@ value : 'token 값'
 	"detail" : "상세설명",
 	"genre" : "fiction",
 	"img" : "사진저장경로",
-	"user_id" : "4" //같이 JSON으로 받는것으로 수정됨 06.21
+	"user_id" : "4"
 }
 
 //response
@@ -222,7 +222,7 @@ bookno 로 책 수정
             "email": "김영일",
             "nickname": "닉임"
         }
-.............
+
     ],
     "meta": {
         "nowPage": 1,
@@ -270,7 +270,7 @@ http://localhost:8080/hellobook/books?keyword=조
             "created_at": "2021-06-17 10:56:26",
             "isrent": "N",
             "hide": "N"
-        } ....
+        } 
        
     ],
     "meta": {
@@ -307,9 +307,7 @@ http://localhost:8080/hellobook/books?keyword=조
 	"writer" : "지은이",
 	"pub" : "출판사",
 	"detail" : "상세설명"
-.
-.
-.
+
 }
 ...
 ```
@@ -446,4 +444,3 @@ http://localhost:8080/hellobook/books/29
 }
 
 ```
-
