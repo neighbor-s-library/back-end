@@ -186,7 +186,7 @@ public class UsersRestController {
 
 		// DB에 저장되어있는 비밀번호
 		String dbpwd = userIdInput.getPw();
-
+		
 		/** request 객체를 사용해서 세션 객체 만들기 */
 		// HttpSession session = request.getSession();
 
@@ -220,24 +220,26 @@ public class UsersRestController {
 		}
 
 		// 결과를 저장할 빈즈
-		// Users output = new Users();
+		 Users output = new Users();
 
-//		try {
-//			// 사용자 번호로 사용자 정보 조회
-//			output = userService.getUserItem(idoutput);
-//
-//		} catch (Exception e) {
-//			return webHelper.getJsonError(e.getLocalizedMessage());
-//
-//		}
+		try {
+			// 사용자 번호로 사용자 정보 조회
+			output = userService.getUserItem(idoutput);
+
+		} catch (Exception e) {
+			return webHelper.getJsonError(e.getLocalizedMessage());
+
+		}
 		
-		
+		//닉네임
+		String nickname = output.getNickname();
 		
 		/** 3)JSON 출력하기 */
 		Map<String, Object> data = new HashMap<String, Object>();
 		// data.put("item", output);
 		data.put("token", jwt);
 		data.put("id", user_id);
+		data.put("nickname", nickname);
 		return webHelper.getJsonData(data);
 	}
 
