@@ -230,10 +230,14 @@ public class UsersRestController {
 //			return webHelper.getJsonError(e.getLocalizedMessage());
 //
 //		}
+		
+		
+		
 		/** 3)JSON 출력하기 */
 		Map<String, Object> data = new HashMap<String, Object>();
 		// data.put("item", output);
 		data.put("token", jwt);
+		data.put("id", user_id);
 		return webHelper.getJsonData(data);
 	}
 
