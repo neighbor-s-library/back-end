@@ -3,6 +3,7 @@
  - Eclipse 2020-12 
  - Spring
  - AWS RDS MySql server
+ - Maven
 # 실행 방법 
  - ERD에 따라 DB환경을 구성하고, *WEB-INF/spring/root-context.xml 의 DB연동에 필요한 환결설정 값을 변경한다. 이후 톰켓에 연동하여 실행한다.
 # RestApi 명세
@@ -51,7 +52,7 @@
     "result": "Success", 
     "successed": "true", 
     "pubDate": "2021-06-23 17:34:00",
-    "token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VyIiwiZGF0YSI6InRlc3RfaGpfMiIsImV4cCI6MTYyNDQ0NDQ0MH0.zS4WOU_xWyDhvz0P3FuohrCJg4ZLePBM4apumBX9114"
+    "token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VyIsImV4cCI6MTYyNDQ0NDQ0MH0.zS4WOU_xWyDhvz0P3FuohrCJg4ZLePBM4apumBX9114"
 }
 ```
 
