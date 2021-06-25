@@ -75,7 +75,7 @@ value : 'token 값'
 	"id" : "13",
 	"address" : "주소",
 	"nickname" : "닉네임",
-  "pw" : "비밀번호",
+  	"pw" : "비밀번호",
 	"tel" : "전화번호"
 }
 
@@ -163,7 +163,7 @@ value : 'token 값'
 	"title" : "제목",
 	"writer" : "지은이",
 	"pub" : "출판사",
-  "deposit" : "보증금",
+ 	"deposit" : "보증금",
 	"detail" : "상세설명",
 	"genre" : "fiction",
 	"img" : "사진저장경로",
@@ -384,7 +384,7 @@ value : 'token 값'
 
 //response - Owner 입장에서의 빌려준 모든 책 목록
 {
-   "result": "Success",
+    "result": "Success",
     "successed": "true",
     "pubDate": "2021-06-23 18:03:51"
 }
@@ -411,7 +411,7 @@ value : 'token 값'
 
 //response
 {
-  "result": "Success",
+    "result": "Success",
     "successed": "true",
     "pubDate": "2021-06-23 18:13:40"
 }
@@ -426,9 +426,12 @@ value : 'token 값'
 - output : JSON
 
 ```json
+//Header
+key : Token
+value : 'token 값'
 
 //response
-{
+{ 
     "result": "Success",
     "output": [    
         {
