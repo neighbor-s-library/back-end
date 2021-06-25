@@ -1,3 +1,10 @@
+# 개발환경
+ - Java 11
+ - Eclipse 2020-12 
+ - Spring
+ - AWS RDS MySql server
+# 실행 방법 
+ - ERD에 따라 DB환경을 구성하고, *WEB-INF/spring/root-context.xml 의 DB연동에 필요한 환결설정 값을 변경한다. 이후 톰켓에 연동하여 실행한다.
 # RestApi 명세
 
 **회원가입**
