@@ -297,7 +297,7 @@ public class UsersRestController {
 	}
 
 	/** 개인 정보 수정 */
-	@RequestMapping(value = "/users", method = RequestMethod.PUT)
+	@RequestMapping(value = "/users", method = RequestMethod.POST)
 	public Map<String, Object> users_revise(HttpServletRequest request, @RequestBody Users user,
 			@RequestHeader(value = "Token", required = false) String token
 
