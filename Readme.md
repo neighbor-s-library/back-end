@@ -57,10 +57,6 @@
 
 - 메소드 : GET
 
-**로그아웃**
-
-- url : /logout
-- input : 필요없음 front 에서 처리
 
 **회원정보 수정** 
 
@@ -70,6 +66,10 @@
 - 예)
 
 ```json
+//Header
+key : Token
+value : 'token 값'
+
 //Param
 {
 	"id" : "13",
@@ -95,6 +95,10 @@
 - 예)
 
 ```json
+//Header
+key : Token
+value : 'token 값'
+
 //Param
 {
 	"email" : "이메일 (비밀번호 변경 URL이 전송된다)"
@@ -142,7 +146,7 @@ value : 'token 값'
 
 ---
 
-**책 등록 (구현완료)(토큰필요)**
+**책 등록 **
 
 - 메소드 : POST
 - url : /books
@@ -150,6 +154,10 @@ value : 'token 값'
 - 예)
 
 ```json
+//Header
+key : Token
+value : 'token 값'
+
 //input
 {
 	"title" : "제목",
@@ -179,6 +187,10 @@ bookno 로 책 수정
 - input: JSON
 
 ```json
+//Header
+key : Token
+value : 'token 값'
+
 {
     "id": 11,
     "title": "제목수정",
@@ -199,7 +211,7 @@ bookno 로 책 수정
 }
 ```
 
-**# 조회 1 : 특정 회원이 등록한 책 (구현완료)**
+**# 조회 1 : 특정 회원이 등록한 책 **
 
 자신의 user_id으로 본인이 등록한 책 조회
 
@@ -251,7 +263,7 @@ bookno 로 책 수정
 - 
 
 
-**# 조회 2 : 책 검색 (구현완료)**
+**# 조회 2 : 책 검색 **
 
 검색어로 bookno 조회
 
@@ -260,6 +272,7 @@ bookno 로 책 수정
 - input : key = keyword
 
 ```json
+
 input : 
 http://localhost:8080/hellobook/books?keyword=조
 
@@ -298,7 +311,7 @@ http://localhost:8080/hellobook/books?keyword=조
 ...
 ```
 
-**# 조회 3 : books list(구현완료)**
+**# 조회 3 : books list**
 
 메인 페이지 최근 등록 책 리스트 (전체 리스트)
 
@@ -319,7 +332,7 @@ http://localhost:8080/hellobook/books?keyword=조
 ...
 ```
 
-**# 조회 4 : 도서 상세 페이지(구현완료)**
+**# 조회 4 : 도서 상세 페이지**
 
 특정 도서의 상세 페이지
 
@@ -349,7 +362,7 @@ http://localhost:8080/hellobook/books/29
 
 ---
 
-**책 대여(토큰필요)**
+**책 대여**
 
 - 메소드 : POST
 - url : /rental
@@ -357,6 +370,10 @@ http://localhost:8080/hellobook/books/29
 - 예)
 
 ```json
+//Header
+key : Token
+value : 'token 값'
+
 //Param
 {
 	"book_id" : "책 번호",
@@ -373,7 +390,7 @@ http://localhost:8080/hellobook/books/29
 }
 ```
 
-**대여 상태 수정(토큰필요)**
+**대여 상태 수정**
 
 - 메소드 : PUT
 - url : /rental
@@ -381,6 +398,10 @@ http://localhost:8080/hellobook/books/29
 - 예)
 
 ```json
+//Header
+key : Token
+value : 'token 값'
+
 //Param
 {
 	"id" : "Rental 번호",
@@ -435,6 +456,9 @@ http://localhost:8080/hellobook/books/29
 - output : JSON
 
 ```json
+//Header
+key : Token
+value : 'token 값'
 
 //response
 {
