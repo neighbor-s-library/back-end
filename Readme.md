@@ -199,8 +199,8 @@ value : 'token 값'
 
 bookno 로 책 수정
 
-- 메소드 :PUT
-- url: /books
+- 메소드 :POST
+- url: /books/edit
 - input: JSON
 
 ```json
@@ -371,6 +371,7 @@ http://localhost:8080/hellobook/books/29
         "genre": "fiction",
         "created_at": "2021-06-17 10:41:48",
         "isrent": "N",
+        "user_id" : "18",
         "hide": "N"
     },
     "pubDate": "2021-06-17 11:31:32"
