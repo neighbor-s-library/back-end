@@ -58,6 +58,22 @@
 
 - 메소드 : GET
 
+**이메일로 회원 유무 확인**
+
+- 메소드 : GET
+- url : localhost:8080/email/{email}
+- input : JSON
+- 예)
+
+```json
+//response
+{
+    "result": "Success",
+    "successed": "true",
+    "id": 10,
+    "pubDate": "2021-06-28 13:34:43"
+}
+```
 
 **회원정보 수정** 
 
