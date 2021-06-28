@@ -61,7 +61,7 @@
 **이메일로 회원 유무 확인**
 
 - 메소드 : GET
-- url : localhost:8080/email/{email}
+- url : localhost:8080/hellobook/email/{email}
 - input : JSON
 - 예)
 
