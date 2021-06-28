@@ -29,7 +29,7 @@
     <select id="selectItem" parameterType="study.spring.hellobook.model.Books" resultMap="booksMap">
         
         SELECT b.id, title, deposit, writer, pub, detail, genre, b.created_at, b.updated_at, 
-        isrent, hide, img, user_id, email, nickname
+        isrent, hide, img, user_id, email, nickname, user_id
         FROM books b 
         INNER JOIN users u 
         ON b.user_id=u.id 

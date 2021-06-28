@@ -212,7 +212,6 @@ public class BooksRestController {
 		input.setUser_id(books.getUser_id());
 
 		// 저장된 결과를 조회하기 위한 객체
-		Books output = null;
 
 		try {
 			// 데이터 저장
@@ -220,7 +219,6 @@ public class BooksRestController {
 			booksService.addBooks(input);
 
 			// 데이터 조회
-			output = booksService.getBooksItem(input);
 		} catch (Exception e) {
 			return webHelper.getJsonError(e.getLocalizedMessage());
 		}
@@ -234,7 +232,7 @@ public class BooksRestController {
 	}
 
 	/** 수정 폼에 대한 action 페이지 */
-	@RequestMapping(value = "/books", method = RequestMethod.PUT)
+	@RequestMapping(value = "/books/edit", method = RequestMethod.POST)
 	public Map<String, Object> put(@RequestBody Books books,
 			@RequestHeader(value = "Token", required = false) String token) {
 		if (token == null) {
@@ -279,14 +277,10 @@ public class BooksRestController {
 		input.setIsrent(books.getIsrent());
 		input.setHide(books.getHide());
 
-		// 수정된 결과를 조회하기 위한 객체
-		Books output = null;
 
 		try {
 			// 데이터 수정
 			booksService.editBooks(input);
-			// 수정 결과 조회
-			output = booksService.getBooksItem(input);
 		} catch (Exception e) {
 			return webHelper.getJsonError(e.getLocalizedMessage());
 		}
