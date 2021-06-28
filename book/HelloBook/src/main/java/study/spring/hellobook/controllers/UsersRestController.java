@@ -130,6 +130,69 @@ public class UsersRestController {
 	}
 
 	/**
+	 * 이메일로 회원이 있는지 확인하기
+	 * 
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/email/{email}", method = RequestMethod.GET)
+	public Map<String, Object> email_check(@PathVariable("email") String email)  {
+
+		if (!regexHelper.isValue(email)) {
+			return webHelper.getJsonWarning("이메일을 입력하세요.");
+		}
+		
+		// 이메일 확인 -> 이메일 정보를 담은 빈즈로 id 확인, id로 pw 찾기 -> 사용자가 입력한 pw 암호화
+		// 두개의 pw 대조 -> 일치하면 Users 정보 확인가능, 세션에 정보 저장
+
+		/** 입력값 일치 확인하기 */
+		// 저장할 값들을 Beans에 담는다.
+		Users input = new Users();
+		input.setEmail(email);
+		Users idoutput = new Users();
+
+		try {
+			// 이메일 정보를 담은 input빈즈를 파라미터로 주고 id 값을 확인
+			userService.getUserItem2(input);
+
+			// 결과 조회
+			idoutput = userService.getUserItem2(input);
+
+			if (idoutput == null) {
+				return webHelper.getJsonError("존재하지 않는 이메일 입니다.");
+			}
+
+		} catch (Exception e) {
+			return webHelper.getJsonError(e.getLocalizedMessage());
+		}
+
+		// email로 찾은 id
+		int user_id = idoutput.getId();
+
+		
+
+//		/** 토큰을 생성 */
+//		Users inputToken = new Users();
+//
+//		String jwt = jwtService.createToken(input.getEmail());
+//
+//		inputToken.setToken(jwt);
+//		inputToken.setEmail(idoutput.getEmail());
+//		/** 토큰을 user table의 token 칼럼에 저장 */
+//		try {
+//			userService.usersTokenUpdate(inputToken);
+//
+//		} catch (Exception e) {
+//			return webHelper.getJsonError(e.getLocalizedMessage());
+//		}
+
+		/** 3)JSON 출력하기 */
+		Map<String, Object> data = new HashMap<String, Object>();
+		data.put("id", user_id);
+		return webHelper.getJsonData(data);
+	}
+	
+	
+	/**
 	 * 로그인 아이디, 패스워드 확인
 	 * 
 	 * @throws Exception
