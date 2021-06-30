@@ -190,8 +190,9 @@ value : 'token 값'
 //response
 {
     "result": "Success",
+    "user_id": 18,
     "successed": "true",
-    "pubDate": "2021-06-24 10:21:59"
+    "pubDate": "2021-06-30 14:41:41"
 }
 ```
 
