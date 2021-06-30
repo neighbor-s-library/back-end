@@ -190,7 +190,7 @@ value : 'token 값'
 //response
 {
     "result": "Success",
-    "user_id": 18,
+    "id": 18,
     "successed": "true",
     "pubDate": "2021-06-30 14:41:41"
 }
@@ -209,15 +209,16 @@ bookno 로 책 수정
 key : Token
 value : 'token 값'
 
-{
+{  
+   "id" : "69",
    "title" : "나루토 64",
    "writer" : "키시모토 마사시",
    "pub" : "대원씨아이",
-    "deposit" : "4000",
+   "deposit" : "4000",
    "detail" : "한 때 동료였던 오비토가 가면 쓴 남자의 정체였음을 알고 동요하는 카카시. 그러나 나루토의 말이 카카시를 다시 일으켜 세운다. 동료는 절대 죽게 내버려 두지 않아. 공세에 들어가는 나루토와 카카시, 하지만 결국 십미가 부활하는데..",
    "genre" : "comic",
    "img" : "https://image.aladin.co.kr/product/3062/26/cover500/8968226415_1.jpg",
-    "user_id" : "18"
+   "user_id" : "18"
    
 }
 //response
