@@ -190,8 +190,9 @@ value : 'token 값'
 //response
 {
     "result": "Success",
+    "user_id": 18,
     "successed": "true",
-    "pubDate": "2021-06-24 10:21:59"
+    "pubDate": "2021-06-30 14:41:41"
 }
 ```
 
@@ -199,8 +200,8 @@ value : 'token 값'
 
 bookno 로 책 수정
 
-- 메소드 :PUT
-- url: /books
+- 메소드 :POST
+- url: /books/edit
 - input: JSON
 
 ```json
@@ -209,16 +210,15 @@ key : Token
 value : 'token 값'
 
 {
-    "id": 11,
-    "title": "제목수정",
-    "writer": "지은이수정",
-    "deposit" : "보증금",
-    "pub": "출판사수정",
-    "detail": "상세설명수정",
-    "genre": "non-fiction",
-    "isrent": "N",
-    "hide": "N",
-    "img": "사진저장경로"
+   "title" : "나루토 64",
+   "writer" : "키시모토 마사시",
+   "pub" : "대원씨아이",
+    "deposit" : "4000",
+   "detail" : "한 때 동료였던 오비토가 가면 쓴 남자의 정체였음을 알고 동요하는 카카시. 그러나 나루토의 말이 카카시를 다시 일으켜 세운다. 동료는 절대 죽게 내버려 두지 않아. 공세에 들어가는 나루토와 카카시, 하지만 결국 십미가 부활하는데..",
+   "genre" : "comic",
+   "img" : "https://image.aladin.co.kr/product/3062/26/cover500/8968226415_1.jpg",
+    "user_id" : "18"
+   
 }
 //response
 {
@@ -371,6 +371,7 @@ http://localhost:8080/hellobook/books/29
         "genre": "fiction",
         "created_at": "2021-06-17 10:41:48",
         "isrent": "N",
+        "user_id" : "18",
         "hide": "N"
     },
     "pubDate": "2021-06-17 11:31:32"
