@@ -226,7 +226,7 @@ public class BooksRestController {
 
 		/** 3) 결과를 확인하기 위한 JSON 출력 */
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("user_id", output.getUser_id());
+		map.put("id", output.getId());
 		//map.putAll(claimMap);
 
 		return webHelper.getJsonData(map);
