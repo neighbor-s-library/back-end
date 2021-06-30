@@ -212,11 +212,12 @@ public class BooksRestController {
 		input.setUser_id(books.getUser_id());
 
 		// 저장된 결과를 조회하기 위한 객체
-
+		Books output = null;
 		try {
 			// 데이터 저장
 			// --> 데이터 저장에 성공하면 파라미터로 전달하는 input 객체에 PK값이 저장된다.
 			booksService.addBooks(input);
+			 output = booksService.getBooksItem(input);
 
 			// 데이터 조회
 		} catch (Exception e) {
@@ -225,7 +226,7 @@ public class BooksRestController {
 
 		/** 3) 결과를 확인하기 위한 JSON 출력 */
 		Map<String, Object> map = new HashMap<String, Object>();
-		//map.put("item", output);
+		map.put("user_id", output.getUser_id());
 		//map.putAll(claimMap);
 
 		return webHelper.getJsonData(map);
